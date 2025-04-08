@@ -44,6 +44,22 @@ export class GameComponent implements OnInit {
     this.gameService.drawCard();
   }
 
+  changeSubjectCard() {
+    this.gameService.changeSubjectCard();
+  }
+
+  changeRoleCard() {
+    this.gameService.changeRoleCard();
+  }
+
+  hasChangedRoleCard(): boolean {
+    return this.gameService.hasChangedRoleCard();
+  }
+
+  hasChangedSubjectCard(): boolean {
+    return this.gameService.hasChangedSubjectCard();
+  }
+
   startTurn() {
     this.gameService.startTimer();
   }

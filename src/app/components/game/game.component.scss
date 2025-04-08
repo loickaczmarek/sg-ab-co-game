@@ -1,244 +1,248 @@
 .game-container {
-  max-width: 800px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
+  text-align: center;
   background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 
-  .game-header {
-    text-align: center;
-    margin-bottom: 2rem;
-
-    h1 {
-      font-size: 2rem;
-      color: #333;
-      margin-bottom: 1rem;
-    }
-
-    .timer {
-      font-size: 3rem;
-      font-weight: bold;
-      color: #666;
-      transition: all 0.3s ease;
-      opacity: 0.5;
-
-      &.active {
-        color: #2196F3;
-        opacity: 1;
-      }
-
-      &.finished {
-        color: #f44336;
-        opacity: 1;
-      }
-    }
+.game-header {
+  margin-bottom: 2rem;
+  
+  h1 {
+    margin-bottom: 1rem;
   }
-
-  .cards-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-    margin-bottom: 2rem;
-  }
-
-  .card {
-    background: white;
-    border-radius: 8px;
-    padding: 1.5rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    text-align: center;
-
-    h2 {
-      color: #444;
-      margin-bottom: 1rem;
-    }
-
-    p {
-      font-size: 1.2rem;
-      color: #666;
-      line-height: 1.4;
-    }
-  }
-
-  .current-player {
-    background-color: #f5f5f5;
-    padding: 1rem;
+  
+  .timer {
+    font-size: 2rem;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
     border-radius: 4px;
-    margin-bottom: 2rem;
-
-    h2 {
-      margin: 0 0 0.5rem 0;
-      color: #333;
-    }
-
-    p {
-      margin: 0;
-      color: #666;
-    }
-  }
-
-  .feedback-section {
-    margin-bottom: 2rem;
-
-    h3 {
-      margin: 0 0 1rem 0;
-      color: #333;
-    }
-
-    .feedback-form {
-      .form-group {
-        margin-bottom: 1rem;
-
-        label {
-          display: block;
-          margin-bottom: 0.5rem;
-          color: #666;
-        }
-
-        textarea {
-          width: 100%;
-          min-height: 100px;
-          padding: 0.5rem;
-          border: 1px solid #ddd;
-          border-radius: 4px;
-          resize: vertical;
-
-          &:focus {
-            outline: none;
-            border-color: #2196f3;
-          }
-        }
-      }
-
-      button {
-        padding: 0.75rem 1.5rem;
-        background-color: #2196f3;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-
-        &:hover {
-          background-color: #1976d2;
-        }
-
-        &:disabled {
-          background-color: #e0e0e0;
-          cursor: not-allowed;
-        }
-      }
-    }
-  }
-
-  .game-end {
-    text-align: center;
-    margin: 2rem 0;
-    padding: 2rem;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
-    h2 {
-      color: #333;
-      font-size: 2rem;
-      margin-bottom: 1rem;
-    }
-
-    p {
-      color: #666;
-      font-size: 1.2rem;
-      margin-bottom: 2rem;
-    }
-
-    .restart-button {
-      padding: 1rem 2rem;
-      font-size: 1.2rem;
-      background-color: #4CAF50;
+    display: inline-block;
+    background-color: #f8f9fa;
+    transition: all 0.3s;
+    
+    &.active {
+      background-color: #28a745;
       color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.2s;
-
-      &:hover {
-        background-color: #45a049;
-      }
+    }
+    
+    &.finished {
+      background-color: #dc3545;
+      color: white;
     }
   }
+}
 
-  .game-controls {
+.cards-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.deck-selection {
+  max-width: 800px;
+  width: 100%;
+  
+  h2 {
+    margin-bottom: 1.5rem;
+  }
+  
+  .deck-buttons {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     gap: 1rem;
-
-    button {
-      padding: 0.8rem 2rem;
-      font-size: 1.1rem;
+    
+    .deck-button {
+      padding: 0.75rem 1.5rem;
+      background-color: #007bff;
+      color: white;
       border: none;
       border-radius: 4px;
       cursor: pointer;
-      transition: all 0.3s ease;
-
-      &.start-button {
-        background-color: #4CAF50;
-        color: white;
-
-        &:hover {
-          background-color: #45a049;
-        }
-
-        &:disabled {
-          background-color: #cccccc;
-          cursor: not-allowed;
-        }
-      }
-
-      &.next-button {
-        background-color: #2196F3;
-        color: white;
-
-        &:hover {
-          background-color: #1976D2;
-        }
+      transition: background-color 0.3s;
+      
+      &:hover {
+        background-color: #0069d9;
       }
     }
   }
+}
 
-  .deck-selection {
-    margin: 2rem 0;
-    text-align: center;
-
-    h2 {
-      margin-bottom: 1.5rem;
-      color: #2c3e50;
+.card {
+  background-color: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+  h2 {
+    margin-bottom: 1rem;
+    color: #333;
+  }
+  
+  p {
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+    color: #555;
+  }
+  
+  .change-button {
+    padding: 0.5rem 1rem;
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    
+    &:hover:not(:disabled) {
+      background-color: #5a6268;
     }
-
-    .deck-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      justify-content: center;
+    
+    &:disabled {
+      background-color: #ced4da;
+      cursor: not-allowed;
     }
+  }
+}
 
-    .deck-button {
-      padding: 1rem 2rem;
-      font-size: 1.1rem;
-      background-color: #3498db;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.3s ease;
+.game-end {
+  margin: 2rem 0;
+  padding: 2rem;
+  
+  h2 {
+    margin-bottom: 1rem;
+  }
+  
+  .restart-button {
+    padding: 0.75rem 1.5rem;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    
+    &:hover {
+      background-color: #218838;
+    }
+  }
+}
 
-      &:hover {
-        background-color: #2980b9;
-        transform: translateY(-2px);
+.game-controls {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  
+  button {
+    padding: 0.75rem 1.5rem;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 1rem;
+    
+    &:disabled {
+      background-color: #ced4da;
+      cursor: not-allowed;
+    }
+  }
+  
+  .start-button {
+    background-color: #28a745;
+    
+    &:hover:not(:disabled) {
+      background-color: #218838;
+    }
+  }
+  
+  .next-button {
+    background-color: #007bff;
+    
+    &:hover {
+      background-color: #0069d9;
+    }
+  }
+}
+
+.current-player {
+  background-color: #f5f5f5;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 2rem;
+
+  h2 {
+    margin: 0 0 0.5rem 0;
+    color: #333;
+  }
+
+  p {
+    margin: 0;
+    color: #666;
+  }
+}
+
+.feedback-section {
+  margin-bottom: 2rem;
+
+  h3 {
+    margin: 0 0 1rem 0;
+    color: #333;
+  }
+
+  .feedback-form {
+    .form-group {
+      margin-bottom: 1rem;
+
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #666;
       }
 
-      &:active {
-        transform: translateY(0);
+      textarea {
+        width: 100%;
+        min-height: 100px;
+        padding: 0.5rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        resize: vertical;
+
+        &:focus {
+          outline: none;
+          border-color: #2196f3;
+        }
+      }
+    }
+
+    button {
+      padding: 0.75rem 1.5rem;
+      background-color: #2196f3;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: #1976d2;
+      }
+
+      &:disabled {
+        background-color: #e0e0e0;
+        cursor: not-allowed;
       }
     }
   }

@@ -25,12 +25,16 @@ export class GameService {
   private availableRoles: string[] = [];
   private currentConfig: GameConfig | null = null;
   private selectedSubjectDeckInRound: string[] = [];
+  private hasChangedRole: boolean = false;
+  private hasChangedSubject: boolean = false;
 
   constructor(private deckService: DeckService) {}
 
   initializeGame(config: GameConfig) {
     this.currentConfig = config;
     this.players = config.players;
+    this.hasChangedRole = false;
+    this.hasChangedSubject = false;
     
     // Récupérer les decks sélectionnés
     this.deckService.getDecks().subscribe((decks: Deck[]) => {
@@ -56,7 +60,8 @@ export class GameService {
 
   drawCard(): void {
     const state = this.gameState.value;
-   
+    this.hasChangedRole = false;
+    this.hasChangedSubject = false;
 
     // Tirer un sujet aléatoire
     const subjectIndex = Math.floor(Math.random() * this.selectedSubjectDeckInRound.length);
@@ -72,6 +77,52 @@ export class GameService {
       currentRole: role,
       timeRemaining: state.timeRemaining // Garder le même temps
     });
+  }
+
+  changeSubjectCard(): void {
+    if (this.hasChangedSubject || this.gameState.value.isPlaying) {
+      return; // Ne permettre qu'un seul changement par tour et pas pendant le jeu
+    }
+
+    const state = this.gameState.value;
+    
+    // Tirer un nouveau sujet aléatoire
+    const subjectIndex = Math.floor(Math.random() * this.selectedSubjectDeckInRound.length);
+    const subject = this.selectedSubjectDeckInRound[subjectIndex];
+    
+    this.gameState.next({
+      ...state,
+      currentSubject: subject
+    });
+    
+    this.hasChangedSubject = true;
+  }
+
+  changeRoleCard(): void {
+    if (this.hasChangedRole || this.gameState.value.isPlaying) {
+      return; // Ne permettre qu'un seul changement par tour et pas pendant le jeu
+    }
+
+    const state = this.gameState.value;
+    
+    // Tirer un nouveau rôle aléatoire
+    const roleIndex = Math.floor(Math.random() * this.availableRoles.length);
+    const role = this.availableRoles[roleIndex];
+    
+    this.gameState.next({
+      ...state,
+      currentRole: role
+    });
+    
+    this.hasChangedRole = true;
+  }
+
+  hasChangedRoleCard(): boolean {
+    return this.hasChangedRole;
+  }
+
+  hasChangedSubjectCard(): boolean {
+    return this.hasChangedSubject;
   }
 
   startTimer(): void {
@@ -149,6 +200,8 @@ export class GameService {
     });
 
     this.stopTimer();
+    this.hasChangedRole = false;
+    this.hasChangedSubject = false;
   }
 
   endGame() {
