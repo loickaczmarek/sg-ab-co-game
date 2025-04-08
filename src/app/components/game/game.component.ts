@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GameService } from '../../services/game.service';
-import { GameState, Deck } from '../../models/game.interface';
+import { GameState, Deck, GameConfig } from '../../models/game.interface';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { DeckService } from '../../services/deck.service';
@@ -16,6 +16,7 @@ import { DeckService } from '../../services/deck.service';
 export class GameComponent implements OnInit {
   gameState$: Observable<GameState>;
   availableDecks: Deck[] = [];
+  private gameConfig: GameConfig | null = null;
 
   constructor(
     private gameService: GameService, 
@@ -26,9 +27,16 @@ export class GameComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.deckService.getDecks().subscribe(decks => {
-      this.availableDecks = decks;
-    });
+    // Récupérer la configuration du jeu
+    const config = this.gameService.getCurrentConfig();
+    if (config) {
+      this.gameConfig = config;
+      this.deckService.getDecks().subscribe(decks => {
+        this.availableDecks = decks.filter(deck => 
+          config.selectedDecks.includes(deck.id)
+        );
+      });
+    }
   }
 
   selectSubjectDeck(deckId: string) {
