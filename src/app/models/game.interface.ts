@@ -4,12 +4,6 @@ export interface GameConfig {
   timePerRound?: number;
 }
 
-export interface Player {
-  name: string;
-  role: string;
-  feedback: Feedback[];
-}
-
 export interface Deck {
   id: string;
   name: string;
@@ -28,10 +22,4 @@ export interface GameState {
     positive: string;
     improvement: string;
   };
-}
-
-export interface Feedback {
-  positivePoints: string;
-  areasForImprovement: string;
-  timestamp: number;
 } 
