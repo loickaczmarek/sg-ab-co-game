@@ -17,19 +17,21 @@
         </button>
       </div>
     </div>
-    <div class="card role-card" *ngIf="state.currentRole">
-      <h2>Rôle</h2>
-      <p>{{ state.currentRole }}</p>
-      <button class="change-button" (click)="changeRoleCard()" [disabled]="hasChangedRoleCard() || state.isPlaying">
-        Changer
-      </button>
-    </div>
-    <div class="card subject-card" *ngIf="state.currentSubject">
-      <h2>Sujet</h2>
-      <p>{{ state.currentSubject }}</p>
-      <button class="change-button" (click)="changeSubjectCard()" [disabled]="hasChangedSubjectCard() || state.isPlaying">
-        Changer
-      </button>
+    <div class="cards-row" *ngIf="state.currentRole || state.currentSubject">
+      <div class="card role-card" *ngIf="state.currentRole">
+        <h2>Rôle</h2>
+        <p>{{ state.currentRole }}</p>
+        <button class="change-button" (click)="changeRoleCard()" [disabled]="hasChangedRoleCard() || state.isPlaying">
+          Changer
+        </button>
+      </div>
+      <div class="card subject-card" *ngIf="state.currentSubject">
+        <h2>Sujet</h2>
+        <p>{{ state.currentSubject }}</p>
+        <button class="change-button" (click)="changeSubjectCard()" [disabled]="hasChangedSubjectCard() || state.isPlaying">
+          Changer
+        </button>
+      </div>
     </div>
   </div>
 
