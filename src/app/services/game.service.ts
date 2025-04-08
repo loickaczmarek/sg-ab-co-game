@@ -44,7 +44,7 @@ export class GameService {
         currentPlayer: this.players[0],
         currentSubject: '',
         currentRole: '',
-        timeRemaining: 10, // 10 secondes fixes
+        timeRemaining: 300, // 5 minutes par défaut
         isPlaying: false,
         feedback: {
           positive: '',
@@ -141,7 +141,7 @@ export class GameService {
       currentPlayer: this.players[nextIndex],
       currentSubject: '',
       currentRole: '',
-      timeRemaining: 10, // 10 secondes fixes
+      timeRemaining: 300, // 5 minutes par défaut
       feedback: {
         positive: '',
         improvement: ''
