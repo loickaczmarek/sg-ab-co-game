@@ -1,1 +1,23 @@
-<p>deck-editor works!</p>
+<div class="deck-editor">
+  <div class="header">
+    <h1>Édition des Decks</h1>
+    <div class="actions">
+      <button class="import-button" (click)="importDecksClick()">
+        Importer les decks
+      </button>
+      <button class="export-button" (click)="exportDecks()">
+        Exporter les decks
+      </button>
+    </div>
+  </div>
+
+  <div class="decks-list">
+    <div *ngFor="let deck of decks" class="deck-item">
+      <h3>{{ deck.name }}</h3>
+      <div class="deck-stats">
+        <p>Sujets: {{ deck.subjects.length }}</p>
+        <p>Rôles: {{ deck.roles.length }}</p>
+      </div>
+    </div>
+  </div>
+</div>
