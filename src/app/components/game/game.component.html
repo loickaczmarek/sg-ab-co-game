@@ -1,0 +1,50 @@
+<div class="game-container" *ngIf="gameState$ | async as state">
+  <div class="game-header" *ngIf="state.currentPlayer && state.currentPlayer !== ''">
+    <h1>Tour de {{ state.currentPlayer }}</h1>
+    <div class="timer" [class.active]="state.isPlaying" [class.finished]="state.timeRemaining === 0">
+      {{ formatTime(state.timeRemaining) }}
+    </div>
+  </div>
+
+  <div class="cards-container" *ngIf="state.currentPlayer">
+    <div class="deck-selection" *ngIf="!state.currentSubject">
+      <h2>Choisissez un deck de sujets</h2>
+      <div class="deck-buttons">
+        <button *ngFor="let deck of availableDecks" 
+                (click)="selectSubjectDeck(deck.id)"
+                class="deck-button">
+          {{ deck.name }}
+        </button>
+      </div>
+    </div>
+    <div class="card role-card" *ngIf="state.currentRole">
+      <h2>Rôle</h2>
+      <p>{{ state.currentRole }}</p>
+    </div>
+    <div class="card subject-card" *ngIf="state.currentSubject">
+      <h2>Sujet</h2>
+      <p>{{ state.currentSubject }}</p>
+    </div>
+  </div>
+
+  <div class="game-end" *ngIf="!state.currentPlayer">
+    <h2>Partie terminée !</h2>
+    <p>Tous les joueurs sont passés.</p>
+    <button class="restart-button" (click)="restartGame()">
+      Nouvelle partie
+    </button>
+  </div>
+
+  <div class="game-controls" *ngIf="state.currentPlayer">
+    <button class="start-button" 
+            *ngIf="!state.isPlaying && state.timeRemaining > 0" 
+            (click)="startTurn()" [disabled]="state.isPlaying">
+      C'est parti !
+    </button>
+    <button class="next-button" 
+            *ngIf="state.timeRemaining === 0" 
+            (click)="nextPlayer()">
+      Joueur suivant
+    </button>
+  </div>
+</div> 

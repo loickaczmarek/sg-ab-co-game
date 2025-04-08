@@ -1,0 +1,36 @@
+<div class="game-setup-container">
+  <h1>Configuration du jeu</h1>
+
+  <section class="players-section">
+    <h2>Joueurs</h2>
+    <div class="add-player">
+      <input type="text" [(ngModel)]="newPlayerName" placeholder="Nom du joueur" (keyup.enter)="addPlayer()">
+      <button (click)="addPlayer()">Ajouter</button>
+    </div>
+    <div class="players-list">
+      <div *ngFor="let player of players; let i = index" class="player-item">
+        <span>{{ player }}</span>
+        <button (click)="removePlayer(i)">×</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="decks-section">
+    <h2>Decks</h2>
+    <div class="decks-grid">
+      <div *ngFor="let deck of availableDecks" 
+           class="deck-card" 
+           [class.selected]="selectedDecks.includes(deck.id)"
+           (click)="toggleDeck(deck.id)">
+        <h3>{{ deck.name }}</h3>
+        <p>{{ deck.description }}</p>
+      </div>
+    </div>
+  </section>
+
+  <button class="start-button" 
+          [disabled]="!canStartGame()"
+          (click)="startGame()">
+    Démarrer la partie
+  </button>
+</div>
