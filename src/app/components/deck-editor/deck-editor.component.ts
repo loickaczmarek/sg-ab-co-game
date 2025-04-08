@@ -73,8 +73,9 @@ export class DeckEditorComponent implements OnInit {
           Array.isArray(deck.subjects) && 
           Array.isArray(deck.roles)
         )) {
-          // Réinitialiser les decks existants
+          // Réinitialiser complètement les decks
           this.deckService.resetDecks();
+          this.deckService['decks'].next([]); // Réinitialiser le BehaviorSubject
           
           // Ajouter les nouveaux decks
           importedDecks.forEach(deck => {
