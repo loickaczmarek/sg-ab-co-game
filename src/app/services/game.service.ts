@@ -12,16 +12,11 @@ export class GameService {
     currentSubject: '',
     currentRole: '',
     timeRemaining: 300, // 5 minutes par défaut
-    isPlaying: false,
-    feedback: {
-      positive: '',
-      improvement: ''
-    }
+    isPlaying: false
   });
 
   private players: string[] = [];
   private timerSubscription: Subscription | null = null;
-  private availableSubjects: string[] = [];
   private availableRoles: string[] = [];
   private currentConfig: GameConfig | null = null;
   private selectedSubjectDeckInRound: string[] = [];
@@ -35,13 +30,12 @@ export class GameService {
     this.players = config.players;
     this.hasChangedRole = false;
     this.hasChangedSubject = false;
-    
+
     // Récupérer les decks sélectionnés
     this.deckService.getDecks().subscribe((decks: Deck[]) => {
       const selectedDecks = decks.filter((deck: Deck) => config.selectedDecks.includes(deck.id));
-      
-      // Rassembler tous les sujets et rôles des decks sélectionnés
-      this.availableSubjects = selectedDecks.flatMap((deck: Deck) => deck.subjects);
+
+      // Rassembler tous les rôles des decks sélectionnés
       this.availableRoles = selectedDecks.flatMap((deck: Deck) => deck.roles);
 
       this.gameState.next({
@@ -49,11 +43,7 @@ export class GameService {
         currentSubject: '',
         currentRole: '',
         timeRemaining: 300, // 5 minutes par défaut
-        isPlaying: false,
-        feedback: {
-          positive: '',
-          improvement: ''
-        }
+        isPlaying: false
       });
     });
   }
@@ -66,7 +56,7 @@ export class GameService {
     // Tirer un sujet aléatoire
     const subjectIndex = Math.floor(Math.random() * this.selectedSubjectDeckInRound.length);
     const subject = this.selectedSubjectDeckInRound[subjectIndex];
-    
+
     // Tirer un rôle aléatoire
     const roleIndex = Math.floor(Math.random() * this.availableRoles.length);
     const role = this.availableRoles[roleIndex];
@@ -85,16 +75,16 @@ export class GameService {
     }
 
     const state = this.gameState.value;
-    
+
     // Tirer un nouveau sujet aléatoire
     const subjectIndex = Math.floor(Math.random() * this.selectedSubjectDeckInRound.length);
     const subject = this.selectedSubjectDeckInRound[subjectIndex];
-    
+
     this.gameState.next({
       ...state,
       currentSubject: subject
     });
-    
+
     this.hasChangedSubject = true;
   }
 
@@ -104,16 +94,16 @@ export class GameService {
     }
 
     const state = this.gameState.value;
-    
+
     // Tirer un nouveau rôle aléatoire
     const roleIndex = Math.floor(Math.random() * this.availableRoles.length);
     const role = this.availableRoles[roleIndex];
-    
+
     this.gameState.next({
       ...state,
       currentRole: role
     });
-    
+
     this.hasChangedRole = true;
   }
 
@@ -152,28 +142,13 @@ export class GameService {
     if (this.timerSubscription) {
       this.timerSubscription.unsubscribe();
       this.timerSubscription = null;
-      
+
       const state = this.gameState.value;
       this.gameState.next({
         ...state,
         isPlaying: false
       });
     }
-  }
-
-  getCurrentPlayer(): string {
-    return this.gameState.value.currentPlayer;
-  }
-
-  addFeedback(positive: string, improvement: string) {
-    const state = this.gameState.value;
-    this.gameState.next({
-      ...state,
-      feedback: {
-        positive,
-        improvement
-      }
-    });
   }
 
   nextPlayer(): void {
@@ -192,11 +167,7 @@ export class GameService {
       currentPlayer: this.players[nextIndex],
       currentSubject: '',
       currentRole: '',
-      timeRemaining: 300, // 5 minutes par défaut
-      feedback: {
-        positive: '',
-        improvement: ''
-      }
+      timeRemaining: 300 // 5 minutes par défaut
     });
 
     this.stopTimer();
@@ -211,11 +182,7 @@ export class GameService {
       currentSubject: '',
       currentRole: '',
       timeRemaining: 0,
-      isPlaying: false,
-      feedback: {
-        positive: '',
-        improvement: ''
-      }
+      isPlaying: false
     });
   }
 

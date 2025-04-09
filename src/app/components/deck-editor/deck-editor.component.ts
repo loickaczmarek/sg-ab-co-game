@@ -12,7 +12,7 @@ import { Deck } from '../../models/game.interface';
 })
 export class DeckEditorComponent implements OnInit {
   decks: Deck[] = [];
-  private fileInput: HTMLInputElement | null = null;
+  private readonly fileInput: HTMLInputElement | null = null;
 
   constructor(private deckService: DeckService) {
     // Créer un input file caché
@@ -65,26 +65,26 @@ export class DeckEditorComponent implements OnInit {
     reader.onload = (e) => {
       try {
         const importedDecks = JSON.parse(e.target?.result as string) as Deck[];
-        
+
         // Vérifier que les decks importés ont la bonne structure
-        if (Array.isArray(importedDecks) && importedDecks.every(deck => 
-          deck.id && 
-          deck.name && 
-          Array.isArray(deck.subjects) && 
+        if (Array.isArray(importedDecks) && importedDecks.every(deck =>
+          deck.id &&
+          deck.name &&
+          Array.isArray(deck.subjects) &&
           Array.isArray(deck.roles)
         )) {
           // Réinitialiser complètement les decks
           this.deckService.resetDecks();
           this.deckService['decks'].next([]); // Réinitialiser le BehaviorSubject
-          
+
           // Ajouter les nouveaux decks
           importedDecks.forEach(deck => {
             this.deckService.addDeck(deck);
           });
-          
+
           // Recharger la liste des decks
           this.loadDecks();
-          
+
           alert('Decks importés avec succès !');
         } else {
           throw new Error('Format de fichier invalide');

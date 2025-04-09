@@ -43,30 +43,6 @@ export class DeckService {
     this.saveDecks(this.decks.value);
   }
 
-  updateDeck(updatedDeck: Deck): void {
-    const currentDecks = this.decks.value;
-    const index = currentDecks.findIndex(d => d.id === updatedDeck.id);
-    if (index !== -1) {
-      currentDecks[index] = updatedDeck;
-      this.decks.next([...currentDecks]);
-      this.saveDecks(this.decks.value);
-    }
-  }
-
-  deleteDeck(deckId: string): void {
-    const currentDecks = this.decks.value;
-    this.decks.next(currentDecks.filter(d => d.id !== deckId));
-    this.saveDecks(this.decks.value);
-  }
-
-  resetToDefault(): void {
-    this.http.get<Deck[]>('assets/data/default-decks.json')
-      .subscribe(decks => {
-        this.decks.next(decks);
-        this.saveDecks(decks);
-      });
-  }
-
   resetDecks(): void {
     localStorage.removeItem(this.STORAGE_KEY);
   }

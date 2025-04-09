@@ -1,7 +1,6 @@
 export interface GameConfig {
   players: string[];
   selectedDecks: string[];
-  timePerRound?: number;
 }
 
 export interface Deck {
@@ -18,8 +17,4 @@ export interface GameState {
   currentRole: string;
   timeRemaining: number;
   isPlaying: boolean;
-  feedback: {
-    positive: string;
-    improvement: string;
-  };
-} 
+}
