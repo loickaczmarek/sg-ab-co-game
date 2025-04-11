@@ -32,7 +32,9 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "baseHref": "/sg-ab-co-game/",
+            "deployUrl": "/sg-ab-co-game/"
           },
           "configurations": {
             "production": {
