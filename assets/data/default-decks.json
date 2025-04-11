@@ -1,0 +1,91 @@
+[
+  {
+    "id": "dev-deck",
+    "name": "Développement",
+    "description": "Deck de cartes sur les sujets et rôles liés au développement logiciel",
+    "subjects": [
+      "Gestion des versions avec Git",
+      "Création d'une API RESTful",
+      "Clean Code : principes et bonnes pratiques",
+      "Frameworks Front-End : React vs Angular",
+      "Tests unitaires et tests d'intégration",
+      "Optimisation des performances d'une application web",
+      "Utilisation des design patterns (modèles de conception)",
+      "Hexagonal/Clean Architecture : découpler les dépendances",
+      "CI/CD : Intégration et déploiement continus",
+      "Les bases de l'accessibilité web"
+    ],
+    "roles": [
+      "Développeur Full-Stack",
+      "Coach Craft / Mentor technique",
+      "Lead Developer / Tech Lead",
+      "Architecte logiciel",
+      "Développeur Front-End",
+      "Développeur Back-End",
+      "Responsable technique (CTO)",
+      "Analyste QA",
+      "Chef de projet technique",
+      "Ingénieur DevOps"
+    ]
+  },
+  {
+    "id": "product-deck",
+    "name": "Produit",
+    "description": "Deck de cartes sur les sujets et rôles liés à la gestion de produit",
+    "subjects": [
+      "Définition et priorisation du backlog produit",
+      "Rédaction des user stories et critères d'acceptation",
+      "Techniques de roadmap produit",
+      "Cycle de vie d'un sprint en méthodologie Scrum",
+      "OKR (Objectives and Key Results) pour piloter une équipe",
+      "Stratégie de go-to-market pour un produit numérique",
+      "Gestion des parties prenantes dans un projet IT",
+      "Facilitation des rétrospectives d'équipe Agile",
+      "Création de personas utilisateurs",
+      "Leadership situationnel : s'adapter à l'équipe",
+      "Conduite de tests utilisateurs",
+      "Recueil des analytics pour de l'amélioration continue"
+    ],
+    "roles": [
+      "Product Owner / Product Manager",
+      "Scrum Master",
+      "Chef de projet Agile",
+      "Chief Product Officer (CPO)",
+      "Coach Agile",
+      "UX/UI Designer",
+      "Responsable Marketing Produit",
+      "Responsable d'équipe (Team Lead)",
+      "Directeur Technique (CTO)",
+      "Responsable des Opérations (COO)"
+    ]
+  },
+  {
+    "id": "data-ia-deck",
+    "name": "Data & IA",
+    "description": "Deck de cartes sur les sujets et rôles liés à la data et à l'intelligence artificielle",
+    "subjects": [
+      "Différence entre Machine Learning, Deep Learning et IA",
+      "Processus d'entraînement d'un modèle de Machine Learning",
+      "Algorithmes de classification vs régression",
+      "Traitement du langage naturel (NLP) et ses applications",
+      "Exploitation et visualisation des données avec Power BI/Tableau",
+      "Détection des biais dans les modèles d'IA",
+      "Importance des features engineering en Data Science",
+      "Apprentissage supervisé vs non supervisé",
+      "MLOps : Déploiement et monitoring des modèles d'IA",
+      "IA générative et ses usages dans l'industrie"
+    ],
+    "roles": [
+      "Data Scientist",
+      "Data Engineer",
+      "Machine Learning Engineer",
+      "Data Analyst",
+      "Architecte Data",
+      "Ingénieur en IA",
+      "Responsable Data (CDO - Chief Data Officer)",
+      "Ingénieur MLOps",
+      "Chercheur en IA",
+      "Analyste en éthique de l'IA"
+    ]
+  }
+]
