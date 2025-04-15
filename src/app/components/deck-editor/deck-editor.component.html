@@ -18,8 +18,11 @@
       <div class="roles-section">
         <p>Rôles : {{ deck.roles.length }}</p>
         <div class="items-container">
-          <span *ngFor="let role of deck.roles">{{ role }}</span>
+          <div *ngFor="let role of deck.roles">
+            <span >{{ role }} <button class="button-delete" (click)="removeRole(deck, role)">×</button></span>
+          </div>
         </div>
+        <button class="button-add" (click)="addRole(deck)">+</button>
       </div>
 
       <div class="subjects-section">

@@ -110,6 +110,32 @@
             transform: translateY(-1px);
           }
         }
+
+        .button-delete {
+          padding: 0.25rem 0.5rem;
+          background: none;
+          color: #e74c3c;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+
+          &:hover {
+            background: #e3f2fd;
+          }
+        }
+
+        .button-add {
+          padding: 0.15rem 0.4rem;
+          background: #4CAF50;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+
+          &:hover {
+            background: #45a049;
+          }
+        }
       }
 
       .roles-section {

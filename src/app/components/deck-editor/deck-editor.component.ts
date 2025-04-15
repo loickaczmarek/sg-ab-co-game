@@ -41,6 +41,16 @@ export class DeckEditorComponent implements OnInit {
     });
   }
 
+  removeRole(deck: Deck, role: string) {
+    const currentDeckIndex = this.decks.indexOf(deck)
+    this.decks[currentDeckIndex].roles.splice(deck.roles.indexOf(role), 1);
+  }
+
+  addRole(deck: Deck) {
+    const currentDeckIndex = this.decks.indexOf(deck)
+    this.decks[currentDeckIndex].roles.push('a compléter')
+  }
+
   exportDecks() {
     const decksJson = JSON.stringify(this.decks, null, 2);
     const blob = new Blob([decksJson], { type: 'application/json' });
@@ -96,4 +106,5 @@ export class DeckEditorComponent implements OnInit {
     };
     reader.readAsText(file);
   }
+
 }
