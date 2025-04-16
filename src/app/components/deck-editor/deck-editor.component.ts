@@ -69,6 +69,20 @@ export class DeckEditorComponent implements OnInit {
     this.deckService.updateDeck(this.decks[currentDeckIndex])
   }
 
+  updateRole(deck: Deck, index: number, event: Event) {
+    const newValue = (event.target as HTMLInputElement).value;
+    const currentDeckIndex = this.decks.indexOf(deck);
+    this.decks[currentDeckIndex].roles[index] = newValue;
+    this.deckService.updateDeck(this.decks[currentDeckIndex]);
+  }
+
+  updateSubject(deck: Deck, index: number, event: Event) {
+    const newValue = (event.target as HTMLInputElement).value;
+    const currentDeckIndex = this.decks.indexOf(deck);
+    this.decks[currentDeckIndex].subjects[index] = newValue;
+    this.deckService.updateDeck(this.decks[currentDeckIndex]);
+  }
+
   exportDecks() {
     const decksJson = JSON.stringify(this.decks, null, 2);
     const blob = new Blob([decksJson], { type: 'application/json' });
