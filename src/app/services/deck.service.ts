@@ -43,6 +43,13 @@ export class DeckService {
     this.saveDecks(this.decks.value);
   }
 
+  updateDeck(deck: Deck): void {
+    const currentDecks = this.decks.value;
+    currentDecks[currentDecks.indexOf(deck)] = deck
+    this.decks.next([...currentDecks]);
+    this.saveDecks(this.decks.value);
+  }
+
   resetDecks(): void {
     localStorage.removeItem(this.STORAGE_KEY);
   }

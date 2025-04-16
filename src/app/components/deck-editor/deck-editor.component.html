@@ -28,8 +28,11 @@
       <div class="subjects-section">
         <p>Sujets : {{ deck.subjects.length }}</p>
         <div class="items-container">
-          <span *ngFor="let subject of deck.subjects">{{ subject }}</span>
+          <div *ngFor="let subject of deck.subjects">
+            <span >{{ subject }} <button class="button-delete" (click)="removeSubject(deck, subject)">×</button></span>
+          </div>
         </div>
+        <button class="button-add" (click)="addSubject(deck)">+</button>
       </div>
     </div>
   </div>
