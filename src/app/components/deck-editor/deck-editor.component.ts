@@ -12,6 +12,7 @@ import { Deck } from '../../models/game.interface';
 })
 export class DeckEditorComponent implements OnInit {
   decks: Deck[] = [];
+  expandedDecks: boolean[] = [];
   private readonly fileInput: HTMLInputElement | null = null;
 
   constructor(private deckService: DeckService) {
@@ -35,10 +36,15 @@ export class DeckEditorComponent implements OnInit {
     this.loadDecks();
   }
 
+  toggleDeck(index: number) {
+    this.expandedDecks[index] = !this.expandedDecks[index];
+  }
+
   private loadDecks() {
     this.deckService.getDecks().subscribe(decks => {
       this.decks = decks;
     });
+    this.expandedDecks = [];
   }
 
   removeRole(deck: Deck, role: string) {
