@@ -41,6 +41,48 @@ export class DeckEditorComponent implements OnInit {
     });
   }
 
+  removeRole(deck: Deck, role: string) {
+    const currentDeckIndex = this.decks.indexOf(deck)
+    this.decks[currentDeckIndex].roles.splice(deck.roles.indexOf(role), 1);
+
+    this.deckService.updateDeck(this.decks[currentDeckIndex])
+  }
+
+  removeSubject(deck: Deck, subject: string) {
+    const currentDeckIndex = this.decks.indexOf(deck)
+    this.decks[currentDeckIndex].subjects.splice(deck.subjects.indexOf(subject), 1);
+
+    this.deckService.updateDeck(this.decks[currentDeckIndex])
+  }
+
+  addRole(deck: Deck) {
+    const currentDeckIndex = this.decks.indexOf(deck)
+    this.decks[currentDeckIndex].roles.push('a compléter')
+
+    this.deckService.updateDeck(this.decks[currentDeckIndex])
+  }
+
+  addSubject(deck: Deck) {
+    const currentDeckIndex = this.decks.indexOf(deck)
+    this.decks[currentDeckIndex].subjects.push('a compléter')
+
+    this.deckService.updateDeck(this.decks[currentDeckIndex])
+  }
+
+  updateRole(deck: Deck, index: number, event: Event) {
+    const newValue = (event.target as HTMLInputElement).value;
+    const currentDeckIndex = this.decks.indexOf(deck);
+    this.decks[currentDeckIndex].roles[index] = newValue;
+    this.deckService.updateDeck(this.decks[currentDeckIndex]);
+  }
+
+  updateSubject(deck: Deck, index: number, event: Event) {
+    const newValue = (event.target as HTMLInputElement).value;
+    const currentDeckIndex = this.decks.indexOf(deck);
+    this.decks[currentDeckIndex].subjects[index] = newValue;
+    this.deckService.updateDeck(this.decks[currentDeckIndex]);
+  }
+
   exportDecks() {
     const decksJson = JSON.stringify(this.decks, null, 2);
     const blob = new Blob([decksJson], { type: 'application/json' });

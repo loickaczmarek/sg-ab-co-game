@@ -18,14 +18,26 @@
       <div class="roles-section">
         <p>Rôles : {{ deck.roles.length }}</p>
         <div class="items-container">
-          <span *ngFor="let role of deck.roles">{{ role }}</span>
+          <div *ngFor="let role of deck.roles; let i = index" class="input-container">
+            <input type="text" [value]="role" (blur)="updateRole(deck, i, $event)" (keyup.enter)="updateRole(deck, i, $event)" class="editable-input">
+            <button class="button-delete" (click)="removeRole(deck, role)">×</button>
+          </div>
+        </div>
+        <div class="add-button-container">
+          <button class="button-add" (click)="addRole(deck)">+</button>
         </div>
       </div>
 
       <div class="subjects-section">
         <p>Sujets : {{ deck.subjects.length }}</p>
         <div class="items-container">
-          <span *ngFor="let subject of deck.subjects">{{ subject }}</span>
+          <div *ngFor="let subject of deck.subjects; let i = index" class="input-container">
+            <input type="text" [value]="subject" (blur)="updateSubject(deck, i, $event)" (keyup.enter)="updateSubject(deck, i, $event)" class="editable-input">
+            <button class="button-delete" (click)="removeSubject(deck, subject)">×</button>
+          </div>
+        </div>
+        <div class="add-button-container">
+          <button class="button-add" (click)="addSubject(deck)">+</button>
         </div>
       </div>
     </div>
