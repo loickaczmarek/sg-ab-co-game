@@ -1,43 +1,71 @@
 <div class="deck-editor">
   <div class="header">
-    <h1>Édition des Decks</h1>
-    <div class="actions">
-      <button class="import-button" (click)="importDecksClick()">
-        Charger les decks
-      </button>
-      <button class="export-button" (click)="exportDecks()">
-        Sauvegarder les decks
-      </button>
+    <div class="title-section">
+      <h1>Édition des Decks</h1>
+      <div class="actions">
+        <button class="import-button" (click)="importDecksClick()">
+          Charger les decks
+        </button>
+        <button class="export-button" (click)="exportDecks()">
+          Sauvegarder les decks
+        </button>
+      </div>
     </div>
+    <button class="info-button">
+      Comment fonctionne l'édition
+      <div class="info-tooltip">
+        <div class="info-section">
+          <h4>Sauvegarde et chargement</h4>
+          <p>• Utilisez le bouton "Charger les decks" pour importer un fichier JSON contenant vos decks</p>
+          <p>• Utilisez le bouton "Sauvegarder les decks" pour exporter vos decks au format JSON</p>
+        </div>
+        <div class="info-section">
+          <h4>Gestion des decks</h4>
+          <p>• Cliquez sur le titre d'un deck pour le déplier/replier</p>
+          <p>• Chaque deck contient deux sections : Rôles et Sujets</p>
+        </div>
+        <div class="info-section">
+          <h4>Modification des éléments</h4>
+          <p>• Pour modifier un rôle ou un sujet : cliquez sur le texte et tapez votre modification</p>
+          <p>• Pour supprimer un élément : cliquez sur le bouton × à droite</p>
+          <p>• Pour ajouter un nouvel élément : cliquez sur le bouton + en bas de la section</p>
+        </div>
+      </div>
+    </button>
   </div>
 
   <div class="decks-list">
-    <div *ngFor="let deck of decks" class="deck-item">
-      <h3>{{ deck.name }}</h3>
-
-      <div class="roles-section">
-        <p>Rôles : {{ deck.roles.length }}</p>
-        <div class="items-container">
-          <div *ngFor="let role of deck.roles; let i = index" class="input-container">
-            <input type="text" [value]="role" (blur)="updateRole(deck, i, $event)" (keyup.enter)="updateRole(deck, i, $event)" class="editable-input">
-            <button class="button-delete" (click)="removeRole(deck, role)">×</button>
-          </div>
-        </div>
-        <div class="add-button-container">
-          <button class="button-add" (click)="addRole(deck)">+</button>
-        </div>
+    <div *ngFor="let deck of decks; let i = index" class="deck-item">
+      <div class="deck-header" (click)="toggleDeck(i)">
+        <h3>{{ deck.name }}</h3>
+        <div class="chevron" [class.expanded]="expandedDecks[i]">&#9662;</div>
       </div>
 
-      <div class="subjects-section">
-        <p>Sujets : {{ deck.subjects.length }}</p>
-        <div class="items-container">
-          <div *ngFor="let subject of deck.subjects; let i = index" class="input-container">
-            <input type="text" [value]="subject" (blur)="updateSubject(deck, i, $event)" (keyup.enter)="updateSubject(deck, i, $event)" class="editable-input">
-            <button class="button-delete" (click)="removeSubject(deck, subject)">×</button>
+      <div class="deck-content" [class.expanded]="expandedDecks[i]">
+        <div class="roles-section">
+          <p>Rôles : {{ deck.roles.length }}</p>
+          <div class="items-container">
+            <div *ngFor="let role of deck.roles; let i = index" class="input-container">
+              <input type="text" [value]="role" (blur)="updateRole(deck, i, $event)" (keyup.enter)="updateRole(deck, i, $event)" class="editable-input">
+              <button class="button-delete" (click)="removeRole(deck, role)">×</button>
+            </div>
+          </div>
+          <div class="add-button-container">
+            <button class="button-add" (click)="addRole(deck)">+</button>
           </div>
         </div>
-        <div class="add-button-container">
-          <button class="button-add" (click)="addSubject(deck)">+</button>
+
+        <div class="subjects-section">
+          <p>Sujets : {{ deck.subjects.length }}</p>
+          <div class="items-container">
+            <div *ngFor="let subject of deck.subjects; let i = index" class="input-container">
+              <input type="text" [value]="subject" (blur)="updateSubject(deck, i, $event)" (keyup.enter)="updateSubject(deck, i, $event)" class="editable-input">
+              <button class="button-delete" (click)="removeSubject(deck, subject)">×</button>
+            </div>
+          </div>
+          <div class="add-button-container">
+            <button class="button-add" (click)="addSubject(deck)">+</button>
+          </div>
         </div>
       </div>
     </div>
