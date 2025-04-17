@@ -11,6 +11,28 @@
     </div>
   </div>
 
+  <div class="description">
+    <h2>Comment utiliser l'éditeur de decks</h2>
+    <div class="description-content">
+      <div class="description-section">
+        <h3>Sauvegarde et chargement</h3>
+        <p>• Utilisez le bouton "Charger les decks" pour importer un fichier JSON contenant vos decks</p>
+        <p>• Utilisez le bouton "Sauvegarder les decks" pour exporter vos decks au format JSON</p>
+      </div>
+      <div class="description-section">
+        <h3>Gestion des decks</h3>
+        <p>• Cliquez sur le titre d'un deck pour le déplier/replier</p>
+        <p>• Chaque deck contient deux sections : Rôles et Sujets</p>
+      </div>
+      <div class="description-section">
+        <h3>Modification des éléments</h3>
+        <p>• Pour modifier un rôle ou un sujet : cliquez sur le texte et tapez votre modification</p>
+        <p>• Pour supprimer un élément : cliquez sur le bouton × à droite</p>
+        <p>• Pour ajouter un nouvel élément : cliquez sur le bouton + en bas de la section</p>
+      </div>
+    </div>
+  </div>
+
   <div class="decks-list">
     <div *ngFor="let deck of decks; let i = index" class="deck-item">
       <div class="deck-header" (click)="toggleDeck(i)">
