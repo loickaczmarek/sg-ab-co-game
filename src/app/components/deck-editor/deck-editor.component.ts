@@ -144,4 +144,9 @@ export class DeckEditorComponent implements OnInit {
     };
     reader.readAsText(file);
   }
+
+  toggleInfo() {
+    // Cette méthode est nécessaire pour éviter l'erreur de compilation
+    // L'affichage de l'info-bulle est géré par CSS avec :hover
+  }
 }
