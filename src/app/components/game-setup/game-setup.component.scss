@@ -134,22 +134,29 @@
     width: 100%;
     max-width: 300px;
     margin: 2rem auto;
-    padding: 1rem;
-    background: #2ecc71;
+    padding: 1.25rem;
+    background: #2196F3;
     color: white;
     border: none;
     border-radius: 8px;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
+    font-weight: 500;
     cursor: pointer;
-    transition: background 0.3s ease;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
 
     &:hover:not(:disabled) {
-      background: #27ae60;
+      background: #1976D2;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
 
     &:disabled {
       background: #bdc3c7;
       cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
     }
   }
 }
