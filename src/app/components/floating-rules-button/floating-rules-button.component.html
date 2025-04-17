@@ -1,4 +1,10 @@
-<button class="floating-rules-button" (click)="toggleRules()">
-  Règles
-</button>
+<div class="floating-buttons-container">
+  <button class="floating-rules-button" (click)="toggleRules()">
+    Règles
+  </button>
+  <button class="floating-help-button" (click)="toggleHelp()">
+    Aide de jeu
+  </button>
+</div>
 <app-rules-tooltip [isVisible]="isRulesVisible" (click)="toggleRules()"></app-rules-tooltip>
+<app-help-tooltip [isVisible]="isHelpVisible" (click)="toggleHelp()"></app-help-tooltip>
