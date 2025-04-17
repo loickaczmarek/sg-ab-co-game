@@ -5,13 +5,14 @@ import { Router } from '@angular/router';
 import { DeckService } from '../../services/deck.service';
 import { GameService } from '../../services/game.service';
 import { Deck, GameConfig } from '../../models/game.interface';
+import { FloatingRulesButtonComponent } from '../floating-rules-button/floating-rules-button.component';
 
 @Component({
   selector: 'app-game-setup',
   templateUrl: './game-setup.component.html',
   styleUrls: ['./game-setup.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, FloatingRulesButtonComponent],
   providers: [DeckService]
 })
 export class GameSetupComponent implements OnInit {
@@ -75,5 +76,10 @@ export class GameSetupComponent implements OnInit {
     if (this.canStartGame()) {
       this.startGame();
     } 
+  }
+
+  onRulesClick(): void {
+    // TODO: Implémenter l'ouverture des règles
+    console.log('Règles cliquées');
   }
 }

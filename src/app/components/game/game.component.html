@@ -1,4 +1,5 @@
 <div class="game-container" *ngIf="gameState$ | async as state">
+  <app-floating-rules-button (rulesClick)="onRulesClick()"></app-floating-rules-button>
   <div class="game-header" *ngIf="state.currentPlayer && state.currentPlayer !== ''">
     <h1>Tour de {{ state.currentPlayer }}</h1>
     <div class="timer" [class.active]="state.isPlaying" [class.finished]="state.timeRemaining === 0">
