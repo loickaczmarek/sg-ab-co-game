@@ -19,6 +19,7 @@ export class GameSetupComponent implements OnInit {
   newPlayerName: string = '';
   availableDecks: Deck[] = [];
   selectedDecks: string[] = [];
+  isInfoExpanded = true;
 
   constructor(
     private deckService: DeckService,
@@ -64,5 +65,15 @@ export class GameSetupComponent implements OnInit {
     
     this.gameService.initializeGame(config);
     this.router.navigate(['/game']);
+  }
+
+  toggleInfo() {
+    this.isInfoExpanded = !this.isInfoExpanded;
+  }
+
+  onStartGameClick() {
+    if (this.canStartGame()) {
+      this.startGame();
+    } 
   }
 }
