@@ -57,16 +57,16 @@
     gap: 1.5rem;
 
     .deck-item {
-      background-color: white;
+      background-color: transparent;
       border-radius: 8px;
       padding: 0;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      box-shadow: none;
       transition: all 0.3s ease;
       display: flex;
       flex-direction: column;
 
       &:hover {
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        box-shadow: none;
       }
 
       .deck-header {
@@ -75,7 +75,10 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        border-bottom: 1px solid #f0f0f0;
+        border-bottom: none;
+        background-color: white;
+        border-radius: 8px 8px 0 0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
         h3 {
           margin: 0;
@@ -98,11 +101,15 @@
       .deck-content {
         max-height: 0;
         overflow: hidden;
-        transition: max-height 0.3s ease, padding 0.3s ease;
+        transition: all 0.3s ease;
+        background-color: transparent;
+        border-radius: 0 0 8px 8px;
 
         &.expanded {
           max-height: 1500px;
           padding: 1.5rem;
+          background-color: white;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
       }
 
