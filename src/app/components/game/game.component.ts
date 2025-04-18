@@ -5,11 +5,12 @@ import { GameState, Deck, GameConfig } from '../../models/game.interface';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { DeckService } from '../../services/deck.service';
+import { FloatingRulesButtonComponent } from '../floating-rules-button/floating-rules-button.component';
 
 @Component({
   selector: 'app-game',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FloatingRulesButtonComponent],
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.scss']
 })
@@ -77,4 +78,5 @@ export class GameComponent implements OnInit {
   restartGame(): void {
     this.router.navigate(['/setup']);
   }
+
 } 

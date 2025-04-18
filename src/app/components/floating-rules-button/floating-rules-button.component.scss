@@ -1,0 +1,33 @@
+.floating-buttons-container {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.floating-rules-button,
+.floating-help-button {
+  z-index: 1000;
+  padding: 10px 20px;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  }
+}
+
+.floating-rules-button {
+  background-color: #007bff;
+}
+
+.floating-help-button {
+  background-color: #28a745;
+}

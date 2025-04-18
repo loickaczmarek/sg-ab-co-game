@@ -5,13 +5,14 @@ import { Router } from '@angular/router';
 import { DeckService } from '../../services/deck.service';
 import { GameService } from '../../services/game.service';
 import { Deck, GameConfig } from '../../models/game.interface';
+import { FloatingRulesButtonComponent } from '../floating-rules-button/floating-rules-button.component';
 
 @Component({
   selector: 'app-game-setup',
   templateUrl: './game-setup.component.html',
   styleUrls: ['./game-setup.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, FloatingRulesButtonComponent],
   providers: [DeckService]
 })
 export class GameSetupComponent implements OnInit {
@@ -19,6 +20,7 @@ export class GameSetupComponent implements OnInit {
   newPlayerName: string = '';
   availableDecks: Deck[] = [];
   selectedDecks: string[] = [];
+  isInfoExpanded = true;
 
   constructor(
     private deckService: DeckService,
@@ -65,4 +67,15 @@ export class GameSetupComponent implements OnInit {
     this.gameService.initializeGame(config);
     this.router.navigate(['/game']);
   }
+
+  toggleInfo() {
+    this.isInfoExpanded = !this.isInfoExpanded;
+  }
+
+  onStartGameClick() {
+    if (this.canStartGame()) {
+      this.startGame();
+    } 
+  }
+
 }

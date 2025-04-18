@@ -1,5 +1,37 @@
 <div class="game-setup-container">
-  <h1>Configuration du jeu</h1>
+  <app-floating-rules-button></app-floating-rules-button>
+  <h1>Mise en place du jeu</h1>
+
+  <button class="info-toggle-button" (click)="toggleInfo()">
+    Comment mettre en place la partie
+    <span class="chevron" [class.expanded]="isInfoExpanded">▼</span>
+  </button>
+
+  <div class="setup-info" [class.expanded]="isInfoExpanded">
+    <div class="info-content">
+      <div class="info-section">
+        <h3>1. Ajoutez les joueurs</h3>
+        <p>• Entrez le nom de chaque participant</p>
+        <p>• Vous pouvez ajouter autant de joueurs que vous le souhaitez, mais plus il y en a, plus la partie sera longue</p>
+      </div>
+      <div class="info-section">
+        <h3>2. Sélectionnez les decks</h3>
+        <p>• Choisissez les decks en fonction des profils des joueurs :</p>
+        <ul>
+          <li>Si vous avez des développeurs, sélectionnez le deck "Développement"</li>
+        </ul>
+        <p>• Vous pouvez sélectionner plusieurs decks pour une partie plus riche</p>
+      </div>
+      <div class="info-section" id="start-game-info">
+        <h3>3. Lancez la partie</h3>
+        <p>• Le bouton "Démarrer la partie" sera activé une fois que :</p>
+        <ul>
+          <li [class.missing]="players.length < 2">Au moins 2 joueurs sont ajoutés</li>
+          <li [class.missing]="selectedDecks.length === 0">Au moins 1 deck est sélectionné</li>
+        </ul>
+      </div>
+    </div>
+  </div>
 
   <section class="players-section">
     <h2>Joueurs</h2>
@@ -28,9 +60,9 @@
     </div>
   </section>
 
-  <button class="start-button" 
+  <button class="start-game-btn" 
           [disabled]="!canStartGame()"
-          (click)="startGame()">
+          (click)="onStartGameClick()">
     Démarrer la partie
   </button>
 </div>

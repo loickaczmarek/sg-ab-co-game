@@ -13,6 +13,7 @@ import { Deck } from '../../models/game.interface';
 export class DeckEditorComponent implements OnInit {
   decks: Deck[] = [];
   expandedDecks: boolean[] = [];
+  isInfoExpanded = true;
   private readonly fileInput: HTMLInputElement | null = null;
 
   constructor(private deckService: DeckService) {
@@ -38,6 +39,10 @@ export class DeckEditorComponent implements OnInit {
 
   toggleDeck(index: number) {
     this.expandedDecks[index] = !this.expandedDecks[index];
+  }
+
+  toggleInfo() {
+    this.isInfoExpanded = !this.isInfoExpanded;
   }
 
   private loadDecks() {
