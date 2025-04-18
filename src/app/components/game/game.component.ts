@@ -79,8 +79,4 @@ export class GameComponent implements OnInit {
     this.router.navigate(['/setup']);
   }
 
-  onRulesClick(): void {
-    // TODO: Implémenter l'ouverture des règles
-    console.log('Règles cliquées');
-  }
 } 

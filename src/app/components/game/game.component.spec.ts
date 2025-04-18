@@ -134,9 +134,4 @@ describe('GameComponent', () => {
     expect(router.navigate).toHaveBeenCalledWith(['/setup']);
   });
 
-  it('should handle rules click', () => {
-    spyOn(console, 'log');
-    component.onRulesClick();
-    expect(console.log).toHaveBeenCalledWith('Règles cliquées');
-  });
 }); 

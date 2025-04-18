@@ -78,8 +78,4 @@ export class GameSetupComponent implements OnInit {
     } 
   }
 
-  onRulesClick(): void {
-    // TODO: Implémenter l'ouverture des règles
-    console.log('Règles cliquées');
-  }
 }
