@@ -119,28 +119,4 @@ describe('DeckEditorComponent', () => {
     importButton.triggerEventHandler('click', null);
     expect(component.importDecksClick).toHaveBeenCalled();
   });
-
-  it('should have a function to add deck', () => {
-    expect(component.addDeck).toBeDefined();
-  });
-  
-  it('should have a function to reset decks', () => {
-    expect(component.resetDecks).toBeDefined();
-  });
-  
-  it('should update deck name', () => {
-    const deck = mockDecks[0];
-    const event = { target: { value: 'New Name' } } as unknown as Event;
-    component.updateDeckName(deck, event);
-    expect(deckService.updateDeck).toHaveBeenCalledWith(deck);
-    expect(deck.name).toBe('New Name');
-  });
-  
-  it('should update deck description', () => {
-    const deck = mockDecks[0];
-    const event = { target: { value: 'New Description' } } as unknown as Event;
-    component.updateDeckDescription(deck, event);
-    expect(deckService.updateDeck).toHaveBeenCalledWith(deck);
-    expect(deck.description).toBe('New Description');
-  });
-}); 
+});

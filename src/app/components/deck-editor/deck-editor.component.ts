@@ -15,37 +15,6 @@ export class DeckEditorComponent implements OnInit {
   expandedDecks: boolean[] = [];
   isInfoExpanded = true;
   private readonly fileInput: HTMLInputElement | null = null;
-  
-  addDeck() {
-    const newDeck: Deck = {
-      id: Date.now().toString(),
-      name: 'Nouveau deck',
-      description: 'Description du deck',
-      subjects: ['Nouveau sujet'],
-      roles: ['Nouveau rôle']
-    };
-    this.deckService.addDeck(newDeck);
-    this.loadDecks();
-  }
-  
-  resetDecks() {
-    this.deckService.resetDecks();
-    this.loadDecks();
-  }
-  
-  updateDeckName(deck: Deck, event: Event) {
-    const newValue = (event.target as HTMLInputElement).value;
-    const currentDeckIndex = this.decks.indexOf(deck);
-    this.decks[currentDeckIndex].name = newValue;
-    this.deckService.updateDeck(this.decks[currentDeckIndex]);
-  }
-  
-  updateDeckDescription(deck: Deck, event: Event) {
-    const newValue = (event.target as HTMLInputElement).value;
-    const currentDeckIndex = this.decks.indexOf(deck);
-    this.decks[currentDeckIndex].description = newValue;
-    this.deckService.updateDeck(this.decks[currentDeckIndex]);
-  }
 
   constructor(private deckService: DeckService) {
     // Créer un input file caché
