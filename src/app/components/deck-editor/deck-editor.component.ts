@@ -80,13 +80,6 @@ export class DeckEditorComponent implements OnInit {
     this.deckService.updateDeck(this.decks[currentDeckIndex]);
   }
 
-  updateDeckDescription(deck: Deck, event: Event) {
-    const newValue = (event.target as HTMLInputElement).value;
-    const currentDeckIndex = this.decks.indexOf(deck);
-    this.decks[currentDeckIndex].description = newValue;
-    this.deckService.updateDeck(this.decks[currentDeckIndex]);
-  }
-
   removeRole(deck: Deck, role: string) {
     const currentDeckIndex = this.decks.indexOf(deck)
     this.decks[currentDeckIndex].roles.splice(deck.roles.indexOf(role), 1);

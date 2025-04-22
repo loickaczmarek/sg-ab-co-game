@@ -55,22 +55,15 @@
                   [value]="deck.name"
                   (blur)="updateDeckName(deck, $event)"
                   (keyup.enter)="updateDeckName(deck, $event)"
+                  (click)="$event.stopPropagation()"
                   class="deck-name-input">
             <div class="chevron" [class.expanded]="expandedDecks[i]">&#9662;</div>
           </div>
-          <button class="deck-delete-button" (click)="removeDeck(deck)">×</button>
+          <button class="deck-delete-button" (click)="removeDeck(deck); $event.stopPropagation()">×</button>
         </div>
       </div>
 
-      <div class="deck-content" [class.expanded]="expandedDecks[i]">
-        <div class="deck-description">
-          <p>Description:</p>
-          <input type="text"
-                [value]="deck.description"
-                (blur)="updateDeckDescription(deck, $event)"
-                (keyup.enter)="updateDeckDescription(deck, $event)"
-                class="deck-description-input">
-        </div>
+      <div class="deck-content" [class.expanded]="expandedDecks[i]" (click)="$event.stopPropagation()">
         <div class="roles-section">
           <p>Rôles : {{ deck.roles.length }}</p>
           <div class="items-container">
@@ -78,14 +71,15 @@
               <input type="text" [value]="role"
                      (blur)="updateRole(deck, j, $event)"
                      (keyup.enter)="updateRole(deck, j, $event)"
+                     (click)="$event.stopPropagation()"
                      class="editable-input">
               <button class="button-delete"
-                      (click)="removeRole(deck, role)">×</button>
+                      (click)="removeRole(deck, role); $event.stopPropagation()">×</button>
             </div>
           </div>
           <div class="add-button-container">
             <button class="button-add"
-                    (click)="addRole(deck)">+</button>
+                    (click)="addRole(deck); $event.stopPropagation()">+</button>
           </div>
         </div>
 
@@ -96,14 +90,15 @@
               <input type="text" [value]="subject"
                      (blur)="updateSubject(deck, j, $event)"
                      (keyup.enter)="updateSubject(deck, j, $event)"
+                     (click)="$event.stopPropagation()"
                      class="editable-input">
               <button class="button-delete"
-                      (click)="removeSubject(deck, subject)">×</button>
+                      (click)="removeSubject(deck, subject); $event.stopPropagation()">×</button>
             </div>
           </div>
           <div class="add-button-container">
             <button class="button-add"
-                    (click)="addSubject(deck)">+</button>
+                    (click)="addSubject(deck); $event.stopPropagation()">+</button>
           </div>
         </div>
       </div>
