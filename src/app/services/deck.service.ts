@@ -29,7 +29,7 @@ export class DeckService {
     }
   }
 
-  private saveDecks(decks: Deck[]): void {
+  saveDecks(decks: Deck[]): void {
     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(decks));
   }
 
