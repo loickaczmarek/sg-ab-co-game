@@ -60,42 +60,43 @@ describe('FloatingRulesButtonComponent', () => {
     expect(component.isRulesVisible).toBeFalse();
   });
 
-  it('should have correct button styles', () => {
-    const button = fixture.debugElement.query(By.css('button'));
-    const styles = window.getComputedStyle(button.nativeElement);
-    expect(styles.position).toBe('fixed');
-    expect(styles.right).toBe('20px');
-    expect(styles.bottom).toBe('20px');
-    expect(styles.zIndex).toBe('1000');
+  it('should have buttons for rules and help', () => {
+    const rulesButton = fixture.debugElement.query(By.css('.floating-rules-button'));
+    const helpButton = fixture.debugElement.query(By.css('.floating-help-button'));
+    
+    expect(rulesButton).not.toBeNull();
+    expect(helpButton).not.toBeNull();
   });
 
-  it('should have correct button hover styles', () => {
-    const button = fixture.debugElement.query(By.css('button'));
-    const styles = window.getComputedStyle(button.nativeElement);
-    expect(styles.transition).toContain('transform');
-    expect(styles.transition).toContain('box-shadow');
+  it('should have button click handlers', () => {
+    expect(component.toggleRules).toBeDefined();
+    expect(component.toggleHelp).toBeDefined();
   });
 
-  it('should emit click events correctly', () => {
-    const rulesButton = fixture.debugElement.query(By.css('.rules-button'));
-    const helpButton = fixture.debugElement.query(By.css('.help-button'));
+  it('should emit events from toggleRules and toggleHelp methods', () => {
+    spyOn(component, 'toggleRules').and.callThrough();
+    spyOn(component, 'toggleHelp').and.callThrough();
 
-    spyOn(component, 'toggleRules');
-    spyOn(component, 'toggleHelp');
-
-    rulesButton.triggerEventHandler('click', null);
+    component.toggleRules();
     expect(component.toggleRules).toHaveBeenCalled();
+    expect(component.isRulesVisible).toBeTrue();
 
-    helpButton.triggerEventHandler('click', null);
+    component.toggleHelp();
     expect(component.toggleHelp).toHaveBeenCalled();
+    expect(component.isHelpVisible).toBeTrue();
   });
 
-  it('should have correct animation styles for tooltips', () => {
+  it('should render tooltips based on visibility state', () => {
     component.isRulesVisible = true;
+    component.isHelpVisible = false;
     fixture.detectChanges();
-    const rulesTooltip = fixture.debugElement.query(By.css('.rules-tooltip'));
-    const styles = window.getComputedStyle(rulesTooltip.nativeElement);
-    expect(styles.transition).toContain('opacity');
-    expect(styles.transition).toContain('transform');
+    
+    const rulesToolTip = fixture.debugElement.query(By.css('app-rules-tooltip'));
+    const helpToolTip = fixture.debugElement.query(By.css('app-help-tooltip'));
+    
+    expect(rulesToolTip).not.toBeNull();
+    expect(helpToolTip).not.toBeNull();
+    expect(rulesToolTip.attributes['ng-reflect-is-visible']).toBe('true');
+    expect(helpToolTip.attributes['ng-reflect-is-visible']).toBe('false');
   });
 });

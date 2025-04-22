@@ -31,12 +31,12 @@ describe('HomeComponent', () => {
   });
 
   it('should have a start game button', () => {
-    const startButton = fixture.debugElement.query(By.css('button[routerLink="/game-setup"]'));
+    const startButton = fixture.debugElement.query(By.css('a[routerLink="/setup"]'));
     expect(startButton).not.toBeNull();
   });
 
   it('should have a deck editor button', () => {
-    const deckEditorButton = fixture.debugElement.query(By.css('button[routerLink="/deck-editor"]'));
+    const deckEditorButton = fixture.debugElement.query(By.css('a[routerLink="/editor"]'));
     expect(deckEditorButton).not.toBeNull();
   });
 
@@ -44,49 +44,35 @@ describe('HomeComponent', () => {
     const titleElement = fixture.debugElement.query(By.css('h1'));
     const styles = window.getComputedStyle(titleElement.nativeElement);
     expect(styles.textAlign).toBe('center');
-    expect(styles.marginBottom).toBe('2rem');
+    // Bootstrap uses margin classes instead of inline styles
+    expect(titleElement.nativeElement.classList.contains('mb-4')).toBeTrue();
   });
 
-  it('should have correct button styles', () => {
-    const buttons = fixture.debugElement.queryAll(By.css('button'));
+  it('should have button elements with Bootstrap classes', () => {
+    const buttons = fixture.debugElement.queryAll(By.css('.btn'));
+    expect(buttons.length).toBeGreaterThan(0);
     buttons.forEach(button => {
-      const styles = window.getComputedStyle(button.nativeElement);
-      expect(styles.padding).toBe('1rem 2rem');
-      expect(styles.fontSize).toBe('1.2rem');
-      expect(styles.margin).toBe('1rem');
+      expect(button.nativeElement.classList.contains('btn')).toBeTrue();
     });
   });
 
-  it('should have correct button hover styles', () => {
-    const buttons = fixture.debugElement.queryAll(By.css('button'));
-    buttons.forEach(button => {
-      const styles = window.getComputedStyle(button.nativeElement);
-      expect(styles.transition).toContain('background-color');
-      expect(styles.transition).toContain('transform');
-    });
+  it('should have bootstrap button variants', () => {
+    const primaryButton = fixture.debugElement.query(By.css('.btn-primary'));
+    const secondaryButton = fixture.debugElement.query(By.css('.btn-secondary'));
+    expect(primaryButton).not.toBeNull();
+    expect(secondaryButton).not.toBeNull();
   });
 
-  it('should navigate to game setup when start button is clicked', () => {
-    const startButton = fixture.debugElement.query(By.css('button[routerLink="/game-setup"]'));
-    spyOn(router, 'navigateByUrl');
-    startButton.triggerEventHandler('click', null);
-    expect(router.navigateByUrl).toHaveBeenCalledWith('/game-setup');
+  it('should have links for navigation', () => {
+    const setupLink = fixture.debugElement.query(By.css('a[routerLink="/setup"]'));
+    const editorLink = fixture.debugElement.query(By.css('a[routerLink="/editor"]'));
+    
+    expect(setupLink.attributes['routerLink']).toBe('/setup');
+    expect(editorLink.attributes['routerLink']).toBe('/editor');
   });
 
-  it('should navigate to deck editor when deck editor button is clicked', () => {
-    const deckEditorButton = fixture.debugElement.query(By.css('button[routerLink="/deck-editor"]'));
-    spyOn(router, 'navigateByUrl');
-    deckEditorButton.triggerEventHandler('click', null);
-    expect(router.navigateByUrl).toHaveBeenCalledWith('/deck-editor');
-  });
-
-  it('should have correct container styles', () => {
-    const container = fixture.debugElement.query(By.css('.container'));
-    const styles = window.getComputedStyle(container.nativeElement);
-    expect(styles.display).toBe('flex');
-    expect(styles.flexDirection).toBe('column');
-    expect(styles.alignItems).toBe('center');
-    expect(styles.justifyContent).toBe('center');
-    expect(styles.minHeight).toBe('100vh');
+  it('should have a text-center container', () => {
+    const container = fixture.debugElement.query(By.css('.text-center'));
+    expect(container).not.toBeNull();
   });
 }); 

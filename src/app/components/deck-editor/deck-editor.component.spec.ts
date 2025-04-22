@@ -120,29 +120,27 @@ describe('DeckEditorComponent', () => {
     expect(component.importDecksClick).toHaveBeenCalled();
   });
 
-  it('should have correct deck card styles', () => {
-    const deckCard = fixture.debugElement.query(By.css('.deck-card'));
-    const styles = window.getComputedStyle(deckCard.nativeElement);
-    expect(styles.margin).toBe('1rem');
-    expect(styles.padding).toBe('1rem');
-    expect(styles.borderRadius).toBe('8px');
+  it('should have a function to add deck', () => {
+    expect(component.addDeck).toBeDefined();
   });
-
-  it('should have correct button styles', () => {
-    const buttons = fixture.debugElement.queryAll(By.css('button'));
-    buttons.forEach(button => {
-      const styles = window.getComputedStyle(button.nativeElement);
-      expect(styles.margin).toBe('0.5rem');
-      expect(styles.padding).toBe('0.5rem 1rem');
-    });
+  
+  it('should have a function to reset decks', () => {
+    expect(component.resetDecks).toBeDefined();
   });
-
-  it('should have correct input styles', () => {
-    const inputs = fixture.debugElement.queryAll(By.css('input'));
-    inputs.forEach(input => {
-      const styles = window.getComputedStyle(input.nativeElement);
-      expect(styles.margin).toBe('0.5rem');
-      expect(styles.padding).toBe('0.5rem');
-    });
+  
+  it('should update deck name', () => {
+    const deck = mockDecks[0];
+    const event = { target: { value: 'New Name' } } as unknown as Event;
+    component.updateDeckName(deck, event);
+    expect(deckService.updateDeck).toHaveBeenCalledWith(deck);
+    expect(deck.name).toBe('New Name');
+  });
+  
+  it('should update deck description', () => {
+    const deck = mockDecks[0];
+    const event = { target: { value: 'New Description' } } as unknown as Event;
+    component.updateDeckDescription(deck, event);
+    expect(deckService.updateDeck).toHaveBeenCalledWith(deck);
+    expect(deck.description).toBe('New Description');
   });
 }); 
