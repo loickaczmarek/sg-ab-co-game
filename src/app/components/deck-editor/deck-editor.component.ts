@@ -52,6 +52,41 @@ export class DeckEditorComponent implements OnInit {
     this.expandedDecks = [];
   }
 
+  addDeck() {
+    const newDeck: Deck = {
+      id: Date.now().toString(),
+      name: 'Nouveau deck',
+      description: 'Description du deck',
+      subjects: ['Nouveau sujet'],
+      roles: ['Nouveau rôle']
+    };
+    this.deckService.addDeck(newDeck);
+    this.loadDecks();
+  }
+
+  removeDeck(deck: Deck) {
+    if (confirm(`Êtes-vous sûr de vouloir supprimer le deck "${deck.name}" ?`)) {
+      const currentDecks = this.decks.filter(d => d.id !== deck.id);
+      this.deckService['decks'].next(currentDecks);
+      this.deckService.saveDecks(currentDecks);
+      this.loadDecks();
+    }
+  }
+
+  updateDeckName(deck: Deck, event: Event) {
+    const newValue = (event.target as HTMLInputElement).value;
+    const currentDeckIndex = this.decks.indexOf(deck);
+    this.decks[currentDeckIndex].name = newValue;
+    this.deckService.updateDeck(this.decks[currentDeckIndex]);
+  }
+
+  updateDeckDescription(deck: Deck, event: Event) {
+    const newValue = (event.target as HTMLInputElement).value;
+    const currentDeckIndex = this.decks.indexOf(deck);
+    this.decks[currentDeckIndex].description = newValue;
+    this.deckService.updateDeck(this.decks[currentDeckIndex]);
+  }
+
   removeRole(deck: Deck, role: string) {
     const currentDeckIndex = this.decks.indexOf(deck)
     this.decks[currentDeckIndex].roles.splice(deck.roles.indexOf(role), 1);

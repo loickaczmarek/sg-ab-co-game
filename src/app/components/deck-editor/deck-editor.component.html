@@ -3,6 +3,9 @@
     <div class="title-section">
       <h1>Édition des Decks</h1>
       <div class="actions">
+        <button class="add-deck-button" (click)="addDeck()">
+          + Nouveau deck
+        </button>
         <button class="import-button" (click)="importDecksClick()">
           Charger les decks
         </button>
@@ -29,6 +32,8 @@
             <h4>Gestion des decks</h4>
             <p>• Cliquez sur le titre d'un deck pour le déplier/replier</p>
             <p>• Chaque deck contient deux sections : Rôles et Sujets</p>
+            <p>• Vous pouvez renommer un deck en cliquant sur son nom</p>
+            <p>• Pour supprimer un deck, cliquez sur le bouton × à côté de son nom</p>
           </div>
           <div class="info-section">
             <h4>Modification des éléments</h4>
@@ -43,35 +48,62 @@
 
   <div class="decks-list">
     <div *ngFor="let deck of decks; let i = index" class="deck-item">
-      <div class="deck-header" (click)="toggleDeck(i)">
-        <h3>{{ deck.name }}</h3>
-        <div class="chevron" [class.expanded]="expandedDecks[i]">&#9662;</div>
+      <div class="deck-header">
+        <div class="deck-title-container">
+          <div class="deck-title" (click)="toggleDeck(i)">
+            <input type="text"
+                  [value]="deck.name"
+                  (blur)="updateDeckName(deck, $event)"
+                  (keyup.enter)="updateDeckName(deck, $event)"
+                  class="deck-name-input">
+            <div class="chevron" [class.expanded]="expandedDecks[i]">&#9662;</div>
+          </div>
+          <button class="deck-delete-button" (click)="removeDeck(deck)">×</button>
+        </div>
       </div>
 
       <div class="deck-content" [class.expanded]="expandedDecks[i]">
+        <div class="deck-description">
+          <p>Description:</p>
+          <input type="text"
+                [value]="deck.description"
+                (blur)="updateDeckDescription(deck, $event)"
+                (keyup.enter)="updateDeckDescription(deck, $event)"
+                class="deck-description-input">
+        </div>
         <div class="roles-section">
           <p>Rôles : {{ deck.roles.length }}</p>
           <div class="items-container">
-            <div *ngFor="let role of deck.roles; let i = index" class="input-container">
-              <input type="text" [value]="role" (blur)="updateRole(deck, i, $event)" (keyup.enter)="updateRole(deck, i, $event)" class="editable-input">
-              <button class="button-delete" (click)="removeRole(deck, role)">×</button>
+            <div *ngFor="let role of deck.roles; let j = index" class="input-container">
+              <input type="text" [value]="role"
+                     (blur)="updateRole(deck, j, $event)"
+                     (keyup.enter)="updateRole(deck, j, $event)"
+                     class="editable-input">
+              <button class="button-delete"
+                      (click)="removeRole(deck, role)">×</button>
             </div>
           </div>
           <div class="add-button-container">
-            <button class="button-add" (click)="addRole(deck)">+</button>
+            <button class="button-add"
+                    (click)="addRole(deck)">+</button>
           </div>
         </div>
 
         <div class="subjects-section">
           <p>Sujets : {{ deck.subjects.length }}</p>
           <div class="items-container">
-            <div *ngFor="let subject of deck.subjects; let i = index" class="input-container">
-              <input type="text" [value]="subject" (blur)="updateSubject(deck, i, $event)" (keyup.enter)="updateSubject(deck, i, $event)" class="editable-input">
-              <button class="button-delete" (click)="removeSubject(deck, subject)">×</button>
+            <div *ngFor="let subject of deck.subjects; let j = index" class="input-container">
+              <input type="text" [value]="subject"
+                     (blur)="updateSubject(deck, j, $event)"
+                     (keyup.enter)="updateSubject(deck, j, $event)"
+                     class="editable-input">
+              <button class="button-delete"
+                      (click)="removeSubject(deck, subject)">×</button>
             </div>
           </div>
           <div class="add-button-container">
-            <button class="button-add" (click)="addSubject(deck)">+</button>
+            <button class="button-add"
+                    (click)="addSubject(deck)">+</button>
           </div>
         </div>
       </div>
