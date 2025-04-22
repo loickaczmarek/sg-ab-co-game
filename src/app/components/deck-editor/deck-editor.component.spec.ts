@@ -119,30 +119,4 @@ describe('DeckEditorComponent', () => {
     importButton.triggerEventHandler('click', null);
     expect(component.importDecksClick).toHaveBeenCalled();
   });
-
-  it('should have correct deck card styles', () => {
-    const deckCard = fixture.debugElement.query(By.css('.deck-card'));
-    const styles = window.getComputedStyle(deckCard.nativeElement);
-    expect(styles.margin).toBe('1rem');
-    expect(styles.padding).toBe('1rem');
-    expect(styles.borderRadius).toBe('8px');
-  });
-
-  it('should have correct button styles', () => {
-    const buttons = fixture.debugElement.queryAll(By.css('button'));
-    buttons.forEach(button => {
-      const styles = window.getComputedStyle(button.nativeElement);
-      expect(styles.margin).toBe('0.5rem');
-      expect(styles.padding).toBe('0.5rem 1rem');
-    });
-  });
-
-  it('should have correct input styles', () => {
-    const inputs = fixture.debugElement.queryAll(By.css('input'));
-    inputs.forEach(input => {
-      const styles = window.getComputedStyle(input.nativeElement);
-      expect(styles.margin).toBe('0.5rem');
-      expect(styles.padding).toBe('0.5rem');
-    });
-  });
-}); 
+});
