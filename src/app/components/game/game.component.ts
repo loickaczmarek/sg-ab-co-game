@@ -7,11 +7,12 @@ import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { DeckService } from '../../services/deck.service';
 import { FloatingRulesButtonComponent } from '../floating-rules-button/floating-rules-button.component';
+import { TimeFormatPipe } from '../../pipes/time-format.pipe';
 
 @Component({
   selector: 'app-game',
   standalone: true,
-  imports: [CommonModule, FloatingRulesButtonComponent],
+  imports: [CommonModule, FloatingRulesButtonComponent, TimeFormatPipe],
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.scss']
 })
@@ -71,12 +72,6 @@ export class GameComponent implements OnInit {
 
   nextPlayer() {
     this.gameService.nextPlayer();
-  }
-
-  formatTime(seconds: number): string {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
   }
 
   restartGame(): void {

@@ -1,4 +1,4 @@
-import { Component, OnInit, DestroyRef, inject } from '@angular/core';
+import { Component, OnInit, DestroyRef, inject, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DeckService } from '../../services/deck.service';
@@ -12,28 +12,14 @@ import { Deck } from '../../models/game.interface';
   styleUrl: './deck-editor.component.scss'
 })
 export class DeckEditorComponent implements OnInit {
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+
   decks: Deck[] = [];
   expandedDecks: boolean[] = [];
   isInfoExpanded = true;
-  private readonly fileInput: HTMLInputElement | null = null;
   private destroyRef = inject(DestroyRef);
 
-  constructor(private deckService: DeckService) {
-    // Créer un input file caché
-    this.fileInput = document.createElement('input');
-    this.fileInput.type = 'file';
-    this.fileInput.accept = '.json';
-    this.fileInput.style.display = 'none';
-    document.body.appendChild(this.fileInput);
-
-    // Écouter l'événement de changement de fichier
-    this.fileInput.addEventListener('change', (event) => {
-      const file = (event.target as HTMLInputElement).files?.[0];
-      if (file) {
-        this.importDecks(file);
-      }
-    });
-  }
+  constructor(private deckService: DeckService) {}
 
   ngOnInit() {
     this.loadDecks();
@@ -76,51 +62,141 @@ export class DeckEditorComponent implements OnInit {
 
   updateDeckName(deck: Deck, event: Event) {
     const newValue = (event.target as HTMLInputElement).value;
-    const currentDeckIndex = this.decks.indexOf(deck);
-    this.decks[currentDeckIndex].name = newValue;
-    this.deckService.updateDeck(this.decks[currentDeckIndex]);
+
+    // Optimistic update: Update local state immediately
+    const deckIndex = this.decks.findIndex(d => d.id === deck.id);
+    if (deckIndex !== -1) {
+      const updatedDeck = {
+        ...this.decks[deckIndex],
+        name: newValue
+      };
+      this.decks[deckIndex] = updatedDeck; // Instant UI update
+
+      // Background save (async, non-blocking)
+      this.deckService.updateDeck(updatedDeck);
+    }
   }
 
-  removeRole(deck: Deck, role: string) {
-    const currentDeckIndex = this.decks.indexOf(deck)
-    this.decks[currentDeckIndex].roles.splice(deck.roles.indexOf(role), 1);
+  removeRole(deck: Deck, index: number) {
+    // Optimistic update: Update local state immediately
+    const deckIndex = this.decks.findIndex(d => d.id === deck.id);
+    if (deckIndex !== -1) {
+      const newRoles = [...this.decks[deckIndex].roles];
+      newRoles.splice(index, 1); // Remove by index
 
-    this.deckService.updateDeck(this.decks[currentDeckIndex])
+      const updatedDeck = {
+        ...this.decks[deckIndex],
+        roles: newRoles
+      };
+      this.decks[deckIndex] = updatedDeck; // Instant UI update
+
+      // Background save (async, non-blocking)
+      this.deckService.updateDeck(updatedDeck);
+    }
   }
 
-  removeSubject(deck: Deck, subject: string) {
-    const currentDeckIndex = this.decks.indexOf(deck)
-    this.decks[currentDeckIndex].subjects.splice(deck.subjects.indexOf(subject), 1);
+  removeSubject(deck: Deck, index: number) {
+    // Optimistic update: Update local state immediately
+    const deckIndex = this.decks.findIndex(d => d.id === deck.id);
+    if (deckIndex !== -1) {
+      const newSubjects = [...this.decks[deckIndex].subjects];
+      newSubjects.splice(index, 1); // Remove by index
 
-    this.deckService.updateDeck(this.decks[currentDeckIndex])
+      const updatedDeck = {
+        ...this.decks[deckIndex],
+        subjects: newSubjects
+      };
+      this.decks[deckIndex] = updatedDeck; // Instant UI update
+
+      // Background save (async, non-blocking)
+      this.deckService.updateDeck(updatedDeck);
+    }
   }
 
   addRole(deck: Deck) {
-    const currentDeckIndex = this.decks.indexOf(deck)
-    this.decks[currentDeckIndex].roles.push('a compléter')
+    // Force blur on active input to save any pending edits
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
 
-    this.deckService.updateDeck(this.decks[currentDeckIndex])
+    // Small delay to ensure blur event is processed
+    setTimeout(() => {
+      // Optimistic update: Update local state immediately
+      const deckIndex = this.decks.findIndex(d => d.id === deck.id);
+      if (deckIndex !== -1) {
+        const updatedDeck = {
+          ...this.decks[deckIndex],
+          roles: [...this.decks[deckIndex].roles, 'a compléter']
+        };
+        this.decks[deckIndex] = updatedDeck; // Instant UI update
+
+        // Background save (async, non-blocking)
+        this.deckService.updateDeck(updatedDeck);
+      }
+    }, 0);
   }
 
   addSubject(deck: Deck) {
-    const currentDeckIndex = this.decks.indexOf(deck)
-    this.decks[currentDeckIndex].subjects.push('a compléter')
+    // Force blur on active input to save any pending edits
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
 
-    this.deckService.updateDeck(this.decks[currentDeckIndex])
+    // Small delay to ensure blur event is processed
+    setTimeout(() => {
+      // Optimistic update: Update local state immediately
+      const deckIndex = this.decks.findIndex(d => d.id === deck.id);
+      if (deckIndex !== -1) {
+        const updatedDeck = {
+          ...this.decks[deckIndex],
+          subjects: [...this.decks[deckIndex].subjects, 'a compléter']
+        };
+        this.decks[deckIndex] = updatedDeck; // Instant UI update
+
+        // Background save (async, non-blocking)
+        this.deckService.updateDeck(updatedDeck);
+      }
+    }, 0);
   }
 
   updateRole(deck: Deck, index: number, event: Event) {
     const newValue = (event.target as HTMLInputElement).value;
-    const currentDeckIndex = this.decks.indexOf(deck);
-    this.decks[currentDeckIndex].roles[index] = newValue;
-    this.deckService.updateDeck(this.decks[currentDeckIndex]);
+
+    // Optimistic update: Update local state immediately
+    const deckIndex = this.decks.findIndex(d => d.id === deck.id);
+    if (deckIndex !== -1) {
+      const newRoles = [...this.decks[deckIndex].roles];
+      newRoles[index] = newValue;
+
+      const updatedDeck = {
+        ...this.decks[deckIndex],
+        roles: newRoles
+      };
+      this.decks[deckIndex] = updatedDeck; // Instant UI update
+
+      // Background save (async, non-blocking)
+      this.deckService.updateDeck(updatedDeck);
+    }
   }
 
   updateSubject(deck: Deck, index: number, event: Event) {
     const newValue = (event.target as HTMLInputElement).value;
-    const currentDeckIndex = this.decks.indexOf(deck);
-    this.decks[currentDeckIndex].subjects[index] = newValue;
-    this.deckService.updateDeck(this.decks[currentDeckIndex]);
+
+    // Optimistic update: Update local state immediately
+    const deckIndex = this.decks.findIndex(d => d.id === deck.id);
+    if (deckIndex !== -1) {
+      const newSubjects = [...this.decks[deckIndex].subjects];
+      newSubjects[index] = newValue;
+
+      const updatedDeck = {
+        ...this.decks[deckIndex],
+        subjects: newSubjects
+      };
+      this.decks[deckIndex] = updatedDeck; // Instant UI update
+
+      // Background save (async, non-blocking)
+      this.deckService.updateDeck(updatedDeck);
+    }
   }
 
   exportDecks() {
@@ -136,28 +212,40 @@ export class DeckEditorComponent implements OnInit {
     document.body.removeChild(a);
   }
 
-  importDecksClick() {
-    if (this.fileInput) {
-      this.fileInput.click();
+  /**
+   * Triggers the hidden file input when user clicks the import button
+   */
+  importDecksClick(): void {
+    this.fileInput.nativeElement.click();
+  }
+
+  /**
+   * Handles file selection from the file input
+   */
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
+    if (file) {
+      this.importDecks(file);
+      // Reset input so same file can be selected again
+      input.value = '';
     }
   }
 
-  private importDecks(file: File) {
+  /**
+   * Imports decks from a JSON file with validation
+   */
+  private importDecks(file: File): void {
     const reader = new FileReader();
+
     reader.onload = (e) => {
       try {
-        const importedDecks = JSON.parse(e.target?.result as string) as Deck[];
+        const importedDecks = JSON.parse(e.target?.result as string);
 
-        // Vérifier que les decks importés ont la bonne structure
-        if (Array.isArray(importedDecks) && importedDecks.every(deck =>
-          deck.id &&
-          deck.name &&
-          Array.isArray(deck.subjects) &&
-          Array.isArray(deck.roles)
-        )) {
-          // Réinitialiser complètement les decks et remplacer par les nouveaux
+        // Validate deck structure
+        if (this.isValidDeckArray(importedDecks)) {
           this.deckService.replaceAllDecks(importedDecks);
-
           alert('Decks importés avec succès !');
         } else {
           throw new Error('Format de fichier invalide');
@@ -167,6 +255,33 @@ export class DeckEditorComponent implements OnInit {
         console.error('Erreur d\'importation:', error);
       }
     };
+
+    reader.onerror = () => {
+      alert('Erreur lors de la lecture du fichier.');
+      console.error('Erreur de lecture du fichier');
+    };
+
     reader.readAsText(file);
+  }
+
+  /**
+   * Type guard to validate deck array structure
+   */
+  private isValidDeckArray(data: unknown): data is Deck[] {
+    return (
+      Array.isArray(data) &&
+      data.every(
+        (deck) =>
+          deck &&
+          typeof deck.id === 'string' &&
+          deck.id.length > 0 &&
+          typeof deck.name === 'string' &&
+          deck.name.length > 0 &&
+          Array.isArray(deck.subjects) &&
+          deck.subjects.every((s: unknown) => typeof s === 'string') &&
+          Array.isArray(deck.roles) &&
+          deck.roles.every((r: unknown) => typeof r === 'string')
+      )
+    );
   }
 }

@@ -41,7 +41,7 @@ describe('RulesTooltipComponent', () => {
   });
 
   it('should display tooltip when isVisible is true', () => {
-    component.isVisible = true;
+    fixture.componentRef.setInput('isVisible', true);
     fixture.detectChanges();
     const tooltipElement = fixture.debugElement.query(By.css('.rules-tooltip.visible'));
     expect(tooltipElement).not.toBeNull();

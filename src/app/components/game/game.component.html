@@ -3,7 +3,7 @@
   <div class="game-header" *ngIf="state.currentPlayer && state.currentPlayer !== ''">
     <h1>Tour de {{ state.currentPlayer }}</h1>
     <div class="timer" [class.active]="state.isPlaying" [class.finished]="state.timeRemaining === 0">
-      {{ formatTime(state.timeRemaining) }}
+      {{ state.timeRemaining | timeFormat }}
     </div>
   </div>
 

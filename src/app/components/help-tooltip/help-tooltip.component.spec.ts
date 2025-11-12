@@ -37,12 +37,12 @@ describe('HelpTooltipComponent', () => {
     expect(tooltipElement.nativeElement.classList.contains('visible')).toBeFalse();
 
     // Show tooltip
-    component.isVisible = true;
+    fixture.componentRef.setInput('isVisible', true);
     fixture.detectChanges();
     expect(tooltipElement.nativeElement.classList.contains('visible')).toBeTrue();
 
     // Hide tooltip
-    component.isVisible = false;
+    fixture.componentRef.setInput('isVisible', false);
     fixture.detectChanges();
     expect(tooltipElement.nativeElement.classList.contains('visible')).toBeFalse();
   });

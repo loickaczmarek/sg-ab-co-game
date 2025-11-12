@@ -157,6 +157,50 @@ describe('DeckService', () => {
     });
   });
 
+  it('should update deck when passed a new object with same id (immutable pattern)', () => {
+    // Set up initial decks
+    const decksCopy = JSON.parse(JSON.stringify(mockDecks));
+    service['decks'].next(decksCopy);
+
+    // Create a NEW object with the same id but different data (mimics immutable update)
+    const originalDeck = decksCopy[0];
+    const updatedDeck = {
+      ...originalDeck,
+      roles: [...originalDeck.roles, 'New Role']
+    };
+
+    spyOn(localStorage, 'setItem');
+    service.updateDeck(updatedDeck);
+
+    service.getDecks().subscribe(decks => {
+      // This should pass after the fix
+      expect(decks[0].roles).toEqual(['Role 1', 'Role 2', 'New Role']);
+      expect(localStorage.setItem).toHaveBeenCalled();
+    });
+  });
+
+  it('should update deck with new subjects array (immutable pattern)', () => {
+    // Set up initial decks
+    const decksCopy = JSON.parse(JSON.stringify(mockDecks));
+    service['decks'].next(decksCopy);
+
+    // Create a NEW object with the same id but different subjects
+    const originalDeck = decksCopy[0];
+    const updatedDeck = {
+      ...originalDeck,
+      subjects: [...originalDeck.subjects, 'New Subject']
+    };
+
+    spyOn(localStorage, 'setItem');
+    service.updateDeck(updatedDeck);
+
+    service.getDecks().subscribe(decks => {
+      // This should pass after the fix
+      expect(decks[0].subjects).toEqual(['Subject 1', 'Subject 2', 'New Subject']);
+      expect(localStorage.setItem).toHaveBeenCalled();
+    });
+  });
+
   it('should reset decks by removing from localStorage', () => {
     spyOn(localStorage, 'removeItem');
     service.resetDecks();

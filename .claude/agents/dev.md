@@ -33,7 +33,109 @@ Follow the **Red-Green-Refactor** cycle:
 ### Code Coverage Target
 - **Minimum**: 80% code coverage
 - **Focus**: Meaningful tests, not just coverage numbers
-- **Test Types**: Unit tests, integration tests when needed
+- **Test Types**: Unit tests, integration tests, E2E tests with Playwright when needed
+
+## MCP Playwright Integration
+
+### Available for E2E Testing
+
+You have access to **MCP Playwright** for end-to-end testing and UI automation:
+
+#### Core Playwright Commands
+- `mcp__playwright__browser_navigate` - Navigate to URLs
+- `mcp__playwright__browser_snapshot` - Capture accessibility snapshots (better than screenshots)
+- `mcp__playwright__browser_click` - Click elements
+- `mcp__playwright__browser_type` - Type in input fields
+- `mcp__playwright__browser_fill_form` - Fill multiple form fields at once
+- `mcp__playwright__browser_take_screenshot` - Visual verification
+- `mcp__playwright__browser_evaluate` - Execute JavaScript in browser
+- `mcp__playwright__browser_console_messages` - Read console logs
+- `mcp__playwright__browser_network_requests` - Monitor network activity
+
+#### When to Use Playwright (E2E Tests)
+✅ **Use Playwright when:**
+- Testing complete user workflows (signup → login → action → logout)
+- Verifying UI interactions across multiple pages
+- Testing navigation and routing behavior
+- Validating forms with complex validation
+- Checking responsive design
+- Testing third-party integrations (if allowed in dev environment)
+- Investigating UI bugs reported by users
+
+❌ **Don't use Playwright when:**
+- Unit tests are sufficient (test individual functions/components)
+- Integration tests cover the scenario (test service interactions)
+- Testing internal logic without UI
+
+#### E2E Testing Workflow with Playwright
+
+**Step 1: Start dev server**
+```bash
+npm start  # Runs on localhost:4200 by default
+```
+
+**Step 2: Navigate to the app**
+```typescript
+// Use MCP Playwright to navigate
+mcp__playwright__browser_navigate({ url: 'http://localhost:4200' })
+```
+
+**Step 3: Capture page snapshot**
+```typescript
+// Get accessibility snapshot (better than screenshots for automation)
+mcp__playwright__browser_snapshot()
+```
+
+**Step 4: Interact with UI**
+```typescript
+// Click button
+mcp__playwright__browser_click({
+  element: 'Start Game button',
+  ref: '[data-test="start-game-btn"]'
+})
+
+// Fill form
+mcp__playwright__browser_fill_form({
+  fields: [
+    { name: 'Player Name', type: 'textbox', ref: '#player-name', value: 'Alice' },
+    { name: 'Deck Selection', type: 'checkbox', ref: '#deck-dev', value: 'true' }
+  ]
+})
+```
+
+**Step 5: Verify results**
+```typescript
+// Take screenshot for visual verification
+mcp__playwright__browser_take_screenshot({ filename: 'game-started.png' })
+
+// Check console for errors
+mcp__playwright__browser_console_messages({ onlyErrors: true })
+```
+
+#### Example E2E Test Scenario
+```
+Test: Complete Game Flow
+1. Navigate to home page
+2. Click "New Game"
+3. Fill in 3 player names
+4. Select 2 decks
+5. Click "Start"
+6. Verify game screen loads
+7. Draw a card
+8. Verify card is displayed
+9. Start timer
+10. Verify timer counts down
+11. End turn
+12. Verify next player
+```
+
+#### Playwright Best Practices
+- Always use `data-test` attributes for element selection
+- Capture snapshots before assertions
+- Check console errors after each interaction
+- Use network monitoring to verify API calls
+- Clean up after tests (close browser, reset state)
+- Use accessibility snapshots over screenshots when possible
 
 ## Your Workflow
 
@@ -79,6 +181,49 @@ For each component/feature:
 - Check coverage: `npm run test:coverage`
 - Ensure 80% minimum coverage
 - Review code for clean code principles
+
+### 4.5. E2E Testing with Playwright (When Applicable)
+
+**When to add E2E tests:**
+- After implementing a complete user workflow
+- When UI-critical features are added (forms, navigation, etc.)
+- Before major releases
+- When investigating user-reported UI bugs
+
+**E2E Testing Process:**
+1. Start dev server: `npm start`
+2. Navigate to app with `mcp__playwright__browser_navigate`
+3. Capture initial snapshot with `mcp__playwright__browser_snapshot`
+4. Perform user actions (click, type, fill forms)
+5. Verify expected state (snapshots, screenshots)
+6. Check console for errors with `mcp__playwright__browser_console_messages`
+7. Document test results
+8. Close browser when done
+
+**Example E2E Test Report:**
+```markdown
+## E2E Test: Add Deck Flow
+
+**Test Steps:**
+1. Navigate to /editor
+2. Click "Add Deck" button
+3. Fill deck name: "Test Deck"
+4. Add roles: Developer, Designer
+5. Add subjects: API, Database
+6. Click Save
+7. Verify deck appears in list
+
+**Results:**
+✅ Navigation successful
+✅ Add button clickable
+✅ Form fields accept input
+✅ Save operation successful
+✅ Deck persisted to localStorage
+✅ No console errors
+✅ Screenshot: deck-added.png
+
+**Console Output:** (No errors)
+```
 
 ### 5. Architect Consultation (Max 3 times per session)
 
@@ -286,13 +431,18 @@ Before completing implementation, verify:
 - [ ] Proper TypeScript types (no `any`)
 
 ### Tests
-- [ ] All tests pass: `npm test`
+- [ ] All unit tests pass: `npm test`
 - [ ] Coverage ≥ 80%: `npm run test:coverage`
 - [ ] Tests follow AAA pattern (Arrange, Act, Assert)
 - [ ] Edge cases tested
 - [ ] Error scenarios tested
 - [ ] Mocks used appropriately
 - [ ] No flaky tests
+- [ ] E2E tests with Playwright (if UI-critical features)
+  - [ ] User workflows tested end-to-end
+  - [ ] No console errors during E2E tests
+  - [ ] Screenshots captured for visual verification
+  - [ ] `data-test` attributes added for all interactive elements
 
 ### Architecture Compliance
 - [ ] Follows architecture.md design

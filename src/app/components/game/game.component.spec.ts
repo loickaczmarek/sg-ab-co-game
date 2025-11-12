@@ -123,12 +123,6 @@ describe('GameComponent', () => {
     expect(gameService.nextPlayer).toHaveBeenCalled();
   });
 
-  it('should format time correctly', () => {
-    expect(component.formatTime(65)).toBe('1:05');
-    expect(component.formatTime(120)).toBe('2:00');
-    expect(component.formatTime(45)).toBe('0:45');
-  });
-
   it('should restart game', () => {
     component.restartGame();
     expect(router.navigate).toHaveBeenCalledWith(['/setup']);

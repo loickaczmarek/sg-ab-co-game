@@ -65,9 +65,12 @@ export class DeckService {
 
   updateDeck(deck: Deck): void {
     const currentDecks = this.decks.value;
-    currentDecks[currentDecks.indexOf(deck)] = deck
-    this.decks.next([...currentDecks]);
-    this.saveDecks(this.decks.value);
+    const index = currentDecks.findIndex(d => d.id === deck.id);
+    if (index !== -1) {
+      currentDecks[index] = deck;
+      this.decks.next([...currentDecks]);
+      this.saveDecks(this.decks.value);
+    }
   }
 
   removeDeck(deckId: string): void {

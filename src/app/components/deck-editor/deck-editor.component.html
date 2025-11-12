@@ -1,4 +1,14 @@
 <div class="deck-editor">
+  <!-- Hidden file input for importing decks -->
+  <input
+    #fileInput
+    type="file"
+    accept=".json"
+    class="visually-hidden"
+    (change)="onFileSelected($event)"
+    aria-label="Importer des decks"
+  />
+
   <div class="header">
     <div class="title-section">
       <h1>Édition des Decks</h1>
@@ -72,12 +82,13 @@
                      (keyup.enter)="updateRole(deck, j, $event)"
                      class="editable-input">
               <button class="button-delete"
-                      (click)="removeRole(deck, role)">×</button>
+                      (click)="removeRole(deck, j)">×</button>
             </div>
           </div>
           <div class="add-button-container">
             <button class="button-add"
-                    (click)="addRole(deck)">+</button>
+                    (mousedown)="addRole(deck)"
+                    data-test="add-role">+</button>
           </div>
         </div>
 
@@ -90,12 +101,13 @@
                      (keyup.enter)="updateSubject(deck, j, $event)"
                      class="editable-input">
               <button class="button-delete"
-                      (click)="removeSubject(deck, subject)">×</button>
+                      (click)="removeSubject(deck, j)">×</button>
             </div>
           </div>
           <div class="add-button-container">
             <button class="button-add"
-                    (click)="addSubject(deck)">+</button>
+                    (mousedown)="addSubject(deck)"
+                    data-test="add-subject">+</button>
           </div>
         </div>
       </div>
