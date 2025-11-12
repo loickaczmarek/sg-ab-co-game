@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, of } from 'rxjs';
+import { first, catchError } from 'rxjs/operators';
 import { Deck } from '../models/game.interface';
 
 @Injectable({
@@ -18,15 +19,34 @@ export class DeckService {
     // Charger d'abord depuis le stockage local
     const storedDecks = localStorage.getItem(this.STORAGE_KEY);
     if (storedDecks) {
-      this.decks.next(JSON.parse(storedDecks));
+      try {
+        const parsedDecks = JSON.parse(storedDecks);
+        this.decks.next(parsedDecks);
+      } catch (error) {
+        console.error('Failed to parse stored decks:', error);
+        this.loadDefaultDecks();
+      }
     } else {
-      // Si rien dans le stockage local, charger les decks par défaut
-      this.http.get<Deck[]>('assets/data/default-decks.json')
-        .subscribe(decks => {
-          this.decks.next(decks);
-          this.saveDecks(decks);
-        });
+      this.loadDefaultDecks();
     }
+  }
+
+  private loadDefaultDecks(): void {
+    // Si rien dans le stockage local, charger les decks par défaut
+    this.http.get<Deck[]>('assets/data/default-decks.json')
+      .pipe(
+        first(),
+        catchError(error => {
+          console.error('Failed to load default decks:', error);
+          return of([]);
+        })
+      )
+      .subscribe(decks => {
+        this.decks.next(decks);
+        if (decks.length > 0) {
+          this.saveDecks(decks);
+        }
+      });
   }
 
   saveDecks(decks: Deck[]): void {
@@ -50,7 +70,20 @@ export class DeckService {
     this.saveDecks(this.decks.value);
   }
 
+  removeDeck(deckId: string): void {
+    const currentDecks = this.decks.value;
+    const filtered = currentDecks.filter(d => d.id !== deckId);
+    this.decks.next(filtered);
+    this.saveDecks(filtered);
+  }
+
+  replaceAllDecks(decks: Deck[]): void {
+    this.decks.next(decks);
+    this.saveDecks(decks);
+  }
+
   resetDecks(): void {
     localStorage.removeItem(this.STORAGE_KEY);
+    this.loadDefaultDecks();
   }
 }

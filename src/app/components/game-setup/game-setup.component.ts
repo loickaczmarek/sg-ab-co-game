@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, DestroyRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DeckService } from '../../services/deck.service';
 import { GameService } from '../../services/game.service';
 import { Deck, GameConfig } from '../../models/game.interface';
@@ -12,8 +13,7 @@ import { FloatingRulesButtonComponent } from '../floating-rules-button/floating-
   templateUrl: './game-setup.component.html',
   styleUrls: ['./game-setup.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, FloatingRulesButtonComponent],
-  providers: [DeckService]
+  imports: [CommonModule, FormsModule, FloatingRulesButtonComponent]
 })
 export class GameSetupComponent implements OnInit {
   players: string[] = [];
@@ -21,6 +21,7 @@ export class GameSetupComponent implements OnInit {
   availableDecks: Deck[] = [];
   selectedDecks: string[] = [];
   isInfoExpanded = true;
+  private destroyRef = inject(DestroyRef);
 
   constructor(
     private deckService: DeckService,
@@ -29,9 +30,11 @@ export class GameSetupComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.deckService.getDecks().subscribe((decks: Deck[]) => {
-      this.availableDecks = decks;
-    });
+    this.deckService.getDecks()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((decks: Deck[]) => {
+        this.availableDecks = decks;
+      });
   }
 
   addPlayer() {

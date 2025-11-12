@@ -26,7 +26,9 @@ describe('DeckEditorComponent', () => {
       'updateDeck',
       'resetDecks',
       'addDeck',
-      'saveDecks'
+      'saveDecks',
+      'removeDeck',
+      'replaceAllDecks'
     ]);
 
     await TestBed.configureTestingModule({
@@ -40,7 +42,7 @@ describe('DeckEditorComponent', () => {
     deckService = TestBed.inject(DeckService) as jasmine.SpyObj<DeckService>;
     deckService.getDecks.and.returnValue(of(mockDecks));
     // Mock the decks property
-    deckService['decks'] = { next: jasmine.createSpy('next') };
+    (deckService as any)['decks'] = { next: jasmine.createSpy('next'), value: mockDecks };
 
     fixture = TestBed.createComponent(DeckEditorComponent);
     component = fixture.componentInstance;
@@ -140,16 +142,14 @@ describe('DeckEditorComponent', () => {
     const deck = mockDecks[0];
     spyOn(window, 'confirm').and.returnValue(true);
     component.removeDeck(deck);
-    expect(deckService['decks'].next).toHaveBeenCalled();
-    expect(deckService.saveDecks).toHaveBeenCalled();
-    expect(deckService.getDecks).toHaveBeenCalled();
+    expect(deckService.removeDeck).toHaveBeenCalledWith(deck.id);
   });
-  
+
   it('should not remove deck when confirm returns false', () => {
     const deck = mockDecks[0];
     spyOn(window, 'confirm').and.returnValue(false);
     component.removeDeck(deck);
-    expect(deckService['decks'].next).not.toHaveBeenCalled();
+    expect(deckService.removeDeck).not.toHaveBeenCalled();
   });
   
   it('should update deck name', () => {
@@ -158,14 +158,6 @@ describe('DeckEditorComponent', () => {
     component.updateDeckName(deck, event);
     expect(deckService.updateDeck).toHaveBeenCalledWith(deck);
     expect(deck.name).toBe('New Name');
-  });
-  
-  it('should update deck description', () => {
-    const deck = mockDecks[0];
-    const event = { target: { value: 'New Description' } } as unknown as Event;
-    component.updateDeckDescription(deck, event);
-    expect(deckService.updateDeck).toHaveBeenCalledWith(deck);
-    expect(deck.description).toBe('New Description');
   });
   
   it('should have button to add new deck', () => {

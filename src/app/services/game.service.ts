@@ -1,138 +1,121 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, interval, Subscription, config } from 'rxjs';
-import { GameConfig, GameState, Deck } from '../models/game.interface';
-import { DeckService } from './deck.service';
+import { BehaviorSubject, Observable, interval, Subscription } from 'rxjs';
+import { first, map } from 'rxjs/operators';
+import { GameConfig, GameState, GamePhase } from '../models/game.interface';
+import { GameStateService } from './game-state.service';
+import { GameInitializationService } from './game-initialization.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GameService {
-  private gameState = new BehaviorSubject<GameState>({
-    currentPlayer: '',
-    currentSubject: '',
-    currentRole: '',
-    timeRemaining: 300, // 5 minutes par défaut
-    isPlaying: false
-  });
-
-  private players: string[] = [];
   private timerSubscription: Subscription | null = null;
-  private availableRoles: string[] = [];
-  private currentConfig: GameConfig | null = null;
-  private selectedSubjectDeckInRound: string[] = [];
-  private hasChangedRole: boolean = false;
-  private hasChangedSubject: boolean = false;
 
-  constructor(private deckService: DeckService) {}
+  constructor(
+    private gameStateService: GameStateService,
+    private gameInitService: GameInitializationService
+  ) {}
 
   initializeGame(config: GameConfig) {
-    this.currentConfig = config;
-    this.players = config.players;
-    this.hasChangedRole = false;
-    this.hasChangedSubject = false;
-
-    // Récupérer les decks sélectionnés
-    this.deckService.getDecks().subscribe((decks: Deck[]) => {
-      const selectedDecks = decks.filter((deck: Deck) => config.selectedDecks.includes(deck.id));
-
-      // Rassembler tous les rôles des decks sélectionnés
-      this.availableRoles = selectedDecks.flatMap((deck: Deck) => deck.roles);
-
-      this.gameState.next({
-        currentPlayer: this.players[0],
-        currentSubject: '',
-        currentRole: '',
-        timeRemaining: 300, // 5 minutes par défaut
-        isPlaying: false
+    // Use GameInitializationService instead of direct DeckService access
+    this.gameInitService.initializeGameData(config)
+      .pipe(first())
+      .subscribe(data => {
+        this.gameStateService.updateState({
+          config,
+          players: config.players,
+          currentPlayerIndex: 0,
+          availableRoles: data.roles,
+          currentSubject: '',
+          currentRole: '',
+          timeRemaining: 300,
+          isPlaying: false,
+          hasChangedRole: false,
+          hasChangedSubject: false,
+          phase: GamePhase.DECK_SELECTION,
+          selectedSubjectDeckInRound: []
+        });
       });
-    });
   }
 
   drawCard(): void {
-    const state = this.gameState.value;
-    this.hasChangedRole = false;
-    this.hasChangedSubject = false;
+    const state = this.gameStateService.getState();
 
     // Tirer un sujet aléatoire
-    const subjectIndex = Math.floor(Math.random() * this.selectedSubjectDeckInRound.length);
-    const subject = this.selectedSubjectDeckInRound[subjectIndex];
+    const subjectIndex = Math.floor(Math.random() * state.selectedSubjectDeckInRound.length);
+    const subject = state.selectedSubjectDeckInRound[subjectIndex];
 
     // Tirer un rôle aléatoire
-    const roleIndex = Math.floor(Math.random() * this.availableRoles.length);
-    const role = this.availableRoles[roleIndex];
+    const roleIndex = Math.floor(Math.random() * state.availableRoles.length);
+    const role = state.availableRoles[roleIndex];
 
-    this.gameState.next({
-      ...state,
+    this.gameStateService.updateState({
       currentSubject: subject,
       currentRole: role,
-      timeRemaining: state.timeRemaining // Garder le même temps
+      hasChangedRole: false,
+      hasChangedSubject: false,
+      phase: GamePhase.CARD_DRAWN
     });
   }
 
   changeSubjectCard(): void {
-    if (this.hasChangedSubject || this.gameState.value.isPlaying) {
+    const state = this.gameStateService.getState();
+
+    if (state.hasChangedSubject || state.isPlaying) {
       return; // Ne permettre qu'un seul changement par tour et pas pendant le jeu
     }
 
-    const state = this.gameState.value;
-
     // Tirer un nouveau sujet aléatoire
-    const subjectIndex = Math.floor(Math.random() * this.selectedSubjectDeckInRound.length);
-    const subject = this.selectedSubjectDeckInRound[subjectIndex];
+    const subjectIndex = Math.floor(Math.random() * state.selectedSubjectDeckInRound.length);
+    const subject = state.selectedSubjectDeckInRound[subjectIndex];
 
-    this.gameState.next({
-      ...state,
-      currentSubject: subject
+    this.gameStateService.updateState({
+      currentSubject: subject,
+      hasChangedSubject: true
     });
-
-    this.hasChangedSubject = true;
   }
 
   changeRoleCard(): void {
-    if (this.hasChangedRole || this.gameState.value.isPlaying) {
+    const state = this.gameStateService.getState();
+
+    if (state.hasChangedRole || state.isPlaying) {
       return; // Ne permettre qu'un seul changement par tour et pas pendant le jeu
     }
 
-    const state = this.gameState.value;
-
     // Tirer un nouveau rôle aléatoire
-    const roleIndex = Math.floor(Math.random() * this.availableRoles.length);
-    const role = this.availableRoles[roleIndex];
+    const roleIndex = Math.floor(Math.random() * state.availableRoles.length);
+    const role = state.availableRoles[roleIndex];
 
-    this.gameState.next({
-      ...state,
-      currentRole: role
+    this.gameStateService.updateState({
+      currentRole: role,
+      hasChangedRole: true
     });
-
-    this.hasChangedRole = true;
   }
 
   hasChangedRoleCard(): boolean {
-    return this.hasChangedRole;
+    return this.gameStateService.getState().hasChangedRole;
   }
 
   hasChangedSubjectCard(): boolean {
-    return this.hasChangedSubject;
+    return this.gameStateService.getState().hasChangedSubject;
   }
 
   startTimer(): void {
     this.stopTimer(); // Arrêter le timer existant si présent
 
-    const state = this.gameState.value;
-    this.gameState.next({
-      ...state,
-      isPlaying: true
+    this.gameStateService.updateState({
+      isPlaying: true,
+      phase: GamePhase.PLAYING
     });
 
     this.timerSubscription = interval(1000).subscribe(() => {
-      const state = this.gameState.value;
+      const state = this.gameStateService.getState();
       if (state.timeRemaining <= 0) {
         this.stopTimer();
         return;
       }
 
-      this.gameState.next({
-        ...state,
+      this.gameStateService.updateState({
         timeRemaining: state.timeRemaining - 1
       });
     });
@@ -143,18 +126,16 @@ export class GameService {
       this.timerSubscription.unsubscribe();
       this.timerSubscription = null;
 
-      const state = this.gameState.value;
-      this.gameState.next({
-        ...state,
-        isPlaying: false
+      this.gameStateService.updateState({
+        isPlaying: false,
+        phase: GamePhase.TURN_ENDED
       });
     }
   }
 
   nextPlayer(): void {
-    const state = this.gameState.value;
-    const currentIndex = this.players.indexOf(state.currentPlayer);
-    const nextIndex = (currentIndex + 1) % this.players.length;
+    const state = this.gameStateService.getState();
+    const nextIndex = (state.currentPlayerIndex + 1) % state.players.length;
 
     // Si on revient au premier joueur, c'est la fin de la partie
     if (nextIndex === 0) {
@@ -162,44 +143,57 @@ export class GameService {
       return;
     }
 
-    this.gameState.next({
-      ...state,
-      currentPlayer: this.players[nextIndex],
+    this.stopTimer();
+
+    this.gameStateService.updateState({
+      currentPlayerIndex: nextIndex,
       currentSubject: '',
       currentRole: '',
-      timeRemaining: 300 // 5 minutes par défaut
+      timeRemaining: 300,
+      hasChangedRole: false,
+      hasChangedSubject: false,
+      phase: GamePhase.DECK_SELECTION
     });
-
-    this.stopTimer();
-    this.hasChangedRole = false;
-    this.hasChangedSubject = false;
   }
 
   endGame() {
     this.stopTimer();
-    this.gameState.next({
-      currentPlayer: '',
+    this.gameStateService.updateState({
+      currentPlayerIndex: -1,
       currentSubject: '',
       currentRole: '',
       timeRemaining: 0,
-      isPlaying: false
+      isPlaying: false,
+      phase: GamePhase.GAME_ENDED
     });
   }
 
   getGameState(): Observable<GameState> {
-    return this.gameState.asObservable();
+    return this.gameStateService.state$.pipe(
+      map(state => ({
+        currentPlayer: state.currentPlayerIndex >= 0 && state.currentPlayerIndex < state.players.length
+          ? state.players[state.currentPlayerIndex]
+          : '',
+        currentSubject: state.currentSubject,
+        currentRole: state.currentRole,
+        timeRemaining: state.timeRemaining,
+        isPlaying: state.isPlaying
+      }))
+    );
   }
 
   getCurrentConfig(): GameConfig | null {
-    return this.currentConfig;
+    return this.gameStateService.getState().config;
   }
 
   selectSubjectDeck(deckId: string): void {
-    this.deckService.getDecks().subscribe(decks => {
-      const selectedDeck = decks.find(deck => deck.id === deckId);
-      if (selectedDeck) {
-        this.selectedSubjectDeckInRound = selectedDeck.subjects;
-      }
-    });
+    // Use GameInitializationService instead of direct DeckService access
+    this.gameInitService.getSubjectDeck(deckId)
+      .pipe(first())
+      .subscribe(subjects => {
+        this.gameStateService.updateState({
+          selectedSubjectDeckInRound: subjects
+        });
+      });
   }
 }

@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, DestroyRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DeckService } from '../../services/deck.service';
 import { Deck } from '../../models/game.interface';
 
@@ -15,6 +16,7 @@ export class DeckEditorComponent implements OnInit {
   expandedDecks: boolean[] = [];
   isInfoExpanded = true;
   private readonly fileInput: HTMLInputElement | null = null;
+  private destroyRef = inject(DestroyRef);
 
   constructor(private deckService: DeckService) {
     // Créer un input file caché
@@ -46,9 +48,11 @@ export class DeckEditorComponent implements OnInit {
   }
 
   private loadDecks() {
-    this.deckService.getDecks().subscribe(decks => {
-      this.decks = decks;
-    });
+    this.deckService.getDecks()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(decks => {
+        this.decks = decks;
+      });
     this.expandedDecks = [];
   }
 
@@ -66,10 +70,7 @@ export class DeckEditorComponent implements OnInit {
 
   removeDeck(deck: Deck) {
     if (confirm(`Êtes-vous sûr de vouloir supprimer le deck "${deck.name}" ?`)) {
-      const currentDecks = this.decks.filter(d => d.id !== deck.id);
-      this.deckService['decks'].next(currentDecks);
-      this.deckService.saveDecks(currentDecks);
-      this.loadDecks();
+      this.deckService.removeDeck(deck.id);
     }
   }
 
@@ -154,17 +155,8 @@ export class DeckEditorComponent implements OnInit {
           Array.isArray(deck.subjects) &&
           Array.isArray(deck.roles)
         )) {
-          // Réinitialiser complètement les decks
-          this.deckService.resetDecks();
-          this.deckService['decks'].next([]); // Réinitialiser le BehaviorSubject
-
-          // Ajouter les nouveaux decks
-          importedDecks.forEach(deck => {
-            this.deckService.addDeck(deck);
-          });
-
-          // Recharger la liste des decks
-          this.loadDecks();
+          // Réinitialiser complètement les decks et remplacer par les nouveaux
+          this.deckService.replaceAllDecks(importedDecks);
 
           alert('Decks importés avec succès !');
         } else {

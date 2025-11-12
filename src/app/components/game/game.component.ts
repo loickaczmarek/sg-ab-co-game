@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, DestroyRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { GameService } from '../../services/game.service';
 import { GameState, Deck, GameConfig } from '../../models/game.interface';
 import { Observable } from 'rxjs';
@@ -18,9 +19,10 @@ export class GameComponent implements OnInit {
   gameState$: Observable<GameState>;
   availableDecks: Deck[] = [];
   private gameConfig: GameConfig | null = null;
+  private destroyRef = inject(DestroyRef);
 
   constructor(
-    private gameService: GameService, 
+    private gameService: GameService,
     private deckService: DeckService,
     private router: Router
   ) {
@@ -32,11 +34,13 @@ export class GameComponent implements OnInit {
     const config = this.gameService.getCurrentConfig();
     if (config) {
       this.gameConfig = config;
-      this.deckService.getDecks().subscribe(decks => {
-        this.availableDecks = decks.filter(deck => 
-          config.selectedDecks.includes(deck.id)
-        );
-      });
+      this.deckService.getDecks()
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(decks => {
+          this.availableDecks = decks.filter(deck =>
+            config.selectedDecks.includes(deck.id)
+          );
+        });
     }
   }
 
